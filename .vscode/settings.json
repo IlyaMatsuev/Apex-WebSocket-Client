@@ -1,0 +1,9 @@
+{
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true,
+    "editor.formatOnPaste": true,
+    "files.exclude": {
+        "src/ws-dispatcher/package-lock.json": true,
+        "src/ws-dispatcher/node_modules": true
+    }
+}

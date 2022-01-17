@@ -1,0 +1,16 @@
+# IDE
+**/.idea/
+
+# Dependencies
+**/node_modules/
+**/package-lock.json
+
+# Build
+**/build/
+**/dist/
+
+# MacOs
+.DS_Store
+
+# Logs
+*.log*
