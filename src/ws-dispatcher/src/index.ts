@@ -1,11 +1,11 @@
 import RequestDispatcher from './request.dispatcher';
-import config from './config.json';
 import Fastify from 'fastify';
 import { fail } from './utils/respond';
 import { validateRequest, ValidationError } from './utils/validate';
+const { 'ws-dispatcher': config } = require('./../../../config.json');
 
-const port = process.env.PORT || config.server.port;
-const apiPath = config.server.apiPath;
+const port = (process.env.PORT || config.port) as number;
+const apiPath = config.apiPath as string;
 
 const server = Fastify({ logger: true });
 

@@ -4,6 +4,8 @@
     "editor.formatOnPaste": true,
     "files.exclude": {
         "src/ws-dispatcher/package-lock.json": true,
-        "src/ws-dispatcher/node_modules": true
+        "src/ws-dispatcher/node_modules": true,
+        "src/test-ws-server/package-lock.json": true,
+        "src/test-ws-server/node_modules": true
     }
 }
