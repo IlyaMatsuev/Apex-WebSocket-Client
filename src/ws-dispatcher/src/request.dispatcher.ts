@@ -1,8 +1,6 @@
 import ConnectCommand from './commands/connect';
 import ListenCommand from './commands/listen';
-import { fail } from './utils/respond';
-import { FastifyReply } from 'fastify';
-import { Request, ICommand, RequestCommand } from './types';
+import { RequestPayload, ICommand, RequestCommand, ServiceError, ResponsePayload } from './types';
 
 const commands: { [key in RequestCommand]: ICommand } = {
     connect: new ConnectCommand(),
@@ -12,11 +10,12 @@ const commands: { [key in RequestCommand]: ICommand } = {
 };
 
 export default class RequestDispatcher {
-    public static dispatch(request: Request, response: FastifyReply): void {
-        if (request.command) {
-            commands[request.command].execute(request, response);
-        } else {
-            fail(response, 'No command has been provided');
+    private constructor() {}
+
+    public static dispatch(request: RequestPayload): Promise<ResponsePayload> {
+        if (!request.command) {
+            throw new ServiceError('No command has been provided');
         }
+        return commands[request.command].execute(request);
     }
 }

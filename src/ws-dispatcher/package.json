@@ -26,6 +26,7 @@
     },
     "dependencies": {
         "fastify": "^3.25.2",
+        "fastify-plugin": "^3.0.0",
         "ncp": "^2.0.0",
         "uuid": "^8.3.2",
         "websocket": "^1.0.34"

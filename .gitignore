@@ -14,3 +14,6 @@
 
 # Logs
 *.log*
+
+# Test projects
+**/test-ws-server/**

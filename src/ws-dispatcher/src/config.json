@@ -1,0 +1,5 @@
+{
+    "port": 8000,
+    "apiPath": "/ws",
+    "timeout": 40000
+}
