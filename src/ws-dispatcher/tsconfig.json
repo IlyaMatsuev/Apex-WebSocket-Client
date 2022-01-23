@@ -18,7 +18,8 @@
         "module": "commonjs",
         "moduleResolution": "node",
         "resolveJsonModule": true,
-        "isolatedModules": false
+        "isolatedModules": false,
+        "declaration": true
     },
     "include": ["src"]
 }

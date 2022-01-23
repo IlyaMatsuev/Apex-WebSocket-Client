@@ -1,6 +1,7 @@
-import { FastifyRequest } from 'fastify';
+import { FastifyPluginAsync, FastifyRequest } from 'fastify';
 import fastifyPlugin from 'fastify-plugin';
-import { RequestPayload, ValidationError } from './../types';
+import { RequestPayload } from './../types';
+import { ValidationError } from './error.ext';
 
 declare module 'fastify' {
     interface FastifyRequest {
@@ -26,6 +27,8 @@ const validateAndGetPayload = function (this: FastifyRequest): RequestPayload {
     return payload;
 };
 
-export default fastifyPlugin(fastify => {
+const plugin: FastifyPluginAsync = async fastify => {
     fastify.decorateRequest('validate', validateAndGetPayload);
-}, '3.x');
+};
+
+export default fastifyPlugin(plugin, '3.x');

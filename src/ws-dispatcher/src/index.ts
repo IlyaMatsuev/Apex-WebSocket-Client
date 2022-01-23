@@ -1,7 +1,7 @@
 import RequestDispatcher from './request.dispatcher';
 import Fastify from 'fastify';
 import fastifyExtention from './extensions/fastify.ext';
-import { ValidationError, ServiceError } from './types';
+import { ValidationError, ServiceError } from './extensions/error.ext';
 import config from './config.json';
 
 const port = process.env.PORT || config.port;

@@ -1,6 +1,7 @@
 import ConnectCommand from './commands/connect';
 import ListenCommand from './commands/listen';
-import { RequestPayload, ICommand, RequestCommand, ServiceError, ResponsePayload } from './types';
+import { ServiceError } from './extensions/error.ext';
+import { RequestPayload, ICommand, RequestCommand, ResponsePayload } from './types';
 
 const commands: { [key in RequestCommand]: ICommand } = {
     connect: new ConnectCommand(),

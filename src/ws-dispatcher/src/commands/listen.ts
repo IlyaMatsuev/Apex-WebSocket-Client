@@ -1,4 +1,5 @@
-import { ICommand, RequestPayload, ResponseEvent, ResponsePayload, ServiceError } from '../types';
+import { ICommand, RequestPayload, ResponseEvent, ResponsePayload } from '../types';
+import { ServiceError } from '../extensions/error.ext';
 import { Store } from '../store/store';
 import { timeout } from './../config.json';
 

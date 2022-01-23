@@ -1,5 +1,6 @@
 import { client as WebSocket } from 'websocket';
-import { ICommand, RequestPayload, ResponsePayload, ServiceError } from '../types';
+import { ICommand, RequestPayload, ResponsePayload } from '../types';
+import { ServiceError } from '../extensions/error.ext';
 import { Store } from '../store/store';
 
 export default class ConnectCommand implements ICommand {
