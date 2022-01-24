@@ -7,7 +7,7 @@ import config from './config.json';
 const port = process.env.PORT || config.port;
 const apiPath = config.apiPath;
 
-const server = Fastify({ logger: true });
+const server = Fastify({ logger: config.logger });
 
 // TODO: validate income request with fastify schema
 // TODO: throw 404 if the url is different

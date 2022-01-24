@@ -1,5 +1,12 @@
 {
     "port": 8000,
     "apiPath": "/ws",
-    "timeout": 40000
+    "timeout": 40000,
+    "logger": {
+        "prettyPrint": {
+            "messageFormat": "{level}: {msg}, {req}",
+            "ignore": "time,pid,hostname,reqId",
+            "colorize": true
+        }
+    }
 }

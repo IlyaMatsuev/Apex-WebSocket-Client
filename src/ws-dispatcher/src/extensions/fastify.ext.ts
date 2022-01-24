@@ -28,7 +28,7 @@ const validateAndGetPayload = function (this: FastifyRequest): RequestPayload {
 };
 
 const plugin: FastifyPluginAsync = async fastify => {
-    fastify.decorateRequest('validate', validateAndGetPayload);
+    fastify.decorateRequest('validateAndGetPayload', validateAndGetPayload);
 };
 
 export default fastifyPlugin(plugin, '3.x');
