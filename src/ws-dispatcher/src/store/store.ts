@@ -1,13 +1,14 @@
 import { EventEmitter } from 'stream';
 import { v4 as uuid } from 'uuid';
-import { connection, Message } from 'websocket';
+import { connection } from 'websocket';
 import WsClient from './ws.client';
+import WsMessage from './ws.message';
 
 export type StoreEventType = 'message' | 'error' | 'close';
 
 export declare interface Store {
-    once(event: `${string}-message`, cb: (data: Message) => void): this;
-    once(event: `${string}-error`, cb: (err: Error) => void): this;
+    once(event: `${string}-message`, cb: (data: WsMessage) => void): this;
+    once(event: `${string}-error`, cb: (err: WsMessage) => void): this;
     once(event: `${string}-close`, cb: (code: number, desc: string) => void): this;
 }
 
@@ -42,7 +43,7 @@ export class Store extends EventEmitter {
         this.clients.delete(clientId);
     }
 
-    public override emit(clientId: string, eventType: StoreEventType, data?: Message | Error): boolean {
+    public override emit(clientId: string, eventType: StoreEventType, data?: WsMessage): boolean {
         return super.emit(`${clientId}-${eventType}`, data);
     }
 }

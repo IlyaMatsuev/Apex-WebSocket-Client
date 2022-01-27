@@ -13,12 +13,15 @@ export default class ConnectCommand implements ICommand {
                 .on('connect', connection => {
                     const client = Store.getStore().addClient(connection);
 
-                    connection
-                        .on('error', error => client.addError(error))
-                        .on('close', () => client.close())
-                        .on('message', message => client.addMessage(message));
+                    connection.on('message', message => client.addMessage(message));
+                    connection.on('error', error => client.addMessage(error));
+                    connection.on('close', () => client.close());
 
-                    resolve({ clientId: client.id, message: 'Connection established', event: 'connect' });
+                    resolve({
+                        clientId: client.id,
+                        messages: ['Connection established'],
+                        event: 'connect'
+                    });
                 });
         });
     }

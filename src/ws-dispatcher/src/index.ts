@@ -36,5 +36,5 @@ server.listen(port, (err, address) => {
         server.log.error(err);
         process.exit(1);
     }
-    server.log.info(`The server is running on port ${port} by address ${address}${apiPath}`);
+    server.log.info(`The server is running at ${address}${apiPath}`);
 });

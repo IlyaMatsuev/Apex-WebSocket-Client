@@ -18,5 +18,5 @@ export type RequestPayload = {
 export type ResponsePayload = {
     clientId?: string;
     event: ResponseEvent;
-    message: string;
+    messages: string[];
 };
