@@ -13,7 +13,14 @@ export default class WsClient {
 
     public constructor(public readonly id: string, private connection: connection) {}
 
-    public addMessage(message: Message | Error): void {
+    public sendMessage(message: string): void {
+        if (!this.connected) {
+            throw new Error(`The client has been already closed: ${this.id}`);
+        }
+        this.connection.send(message);
+    }
+
+    public receiveMessage(message: Message | Error): void {
         if (!this.connected) {
             throw new Error(`The client has been already closed: ${this.id}`);
         }
@@ -24,7 +31,11 @@ export default class WsClient {
         }
     }
 
-    public close(): void {
+    public close(force: boolean = false): void {
+        if (force) {
+            this.connection.close();
+            Store.getStore().removeClient(this.id);
+        }
         this.emit('close');
     }
 

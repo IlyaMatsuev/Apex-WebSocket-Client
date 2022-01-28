@@ -1,5 +1,6 @@
 import { FastifyPluginAsync, FastifyRequest } from 'fastify';
 import fastifyPlugin from 'fastify-plugin';
+import { Store } from '../store/store';
 import { RequestPayload } from './../types';
 import { ValidationError } from './error.ext';
 
@@ -16,14 +17,23 @@ const validateAndGetPayload = function (this: FastifyRequest): RequestPayload {
 
     const payload = this.body as RequestPayload;
     if (!payload.command) {
-        throw new ValidationError('The command is required');
+        throw new ValidationError('No command has been provided');
     }
-    if (!payload.endpoint) {
-        throw new ValidationError('The endpoint is required');
+    if (payload.command === 'connect') {
+        if (!payload.endpoint) {
+            throw new ValidationError('The endpoint is required');
+        }
+        if (!payload.endpoint.startsWith('ws://') && !payload.endpoint.startsWith('wss://')) {
+            throw new ValidationError('Invalid ws endpoint format');
+        }
+    } else if (!Store.getStore().hasClient(payload.clientId)) {
+        throw new ValidationError(`Whether no client id has been provided or it's incorrect`);
     }
-    if (!payload.endpoint.startsWith('ws://') && !payload.endpoint.startsWith('wss://')) {
-        throw new ValidationError('Invalid ws endpoint format');
+
+    if (payload.command === 'message' && !payload.message) {
+        throw new ValidationError(`No message has been provided`);
     }
+
     return payload;
 };
 

@@ -27,8 +27,12 @@ export class Store extends EventEmitter {
         return this.store;
     }
 
-    public getClientOrNull(id: string | undefined): WsClient | null | undefined {
-        return id ? this.clients.get(id) : null;
+    public hasClient(id: string | undefined): boolean {
+        return !!id && this.clients.has(id);
+    }
+
+    public getClient(id: string): WsClient {
+        return this.clients.get(id)!;
     }
 
     public addClient(connection: connection): WsClient {
@@ -38,8 +42,6 @@ export class Store extends EventEmitter {
     }
 
     public removeClient(clientId: string): void {
-        // TODO: check whether it's possible to delete all listeners for a particular string event name
-        // Or maybe I don't need this since I'm firing 'closed' event, so the listeners can close themselves
         this.clients.delete(clientId);
     }
 

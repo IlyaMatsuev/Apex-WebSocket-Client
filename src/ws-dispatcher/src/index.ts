@@ -9,14 +9,11 @@ const apiPath = config.apiPath;
 
 const server = Fastify({ logger: config.logger });
 
+// TODO: move from "websocket" to the "ws" package
 // TODO: validate income request with fastify schema
 // TODO: throw 404 if the url is different
 
 server.register(fastifyExtention);
-
-server.get(apiPath, async (_, response) => {
-    response.send('hello world');
-});
 
 server.post(apiPath, async (request, response) => {
     try {
