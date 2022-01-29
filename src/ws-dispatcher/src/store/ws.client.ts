@@ -33,7 +33,7 @@ export default class WsClient {
 
     public close(force: boolean = false): void {
         if (force) {
-            this.connection.close();
+            this.connection.removeAllListeners().close();
             Store.getStore().removeClient(this.id);
         }
         this.emit('close');
