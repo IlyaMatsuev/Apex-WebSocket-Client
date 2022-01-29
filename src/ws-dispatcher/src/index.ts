@@ -1,5 +1,7 @@
 import RequestDispatcher from './request.dispatcher';
 import Fastify from 'fastify';
+import middie from 'middie';
+import cors from 'cors';
 import fastifyExtention from './extensions/fastify.ext';
 import { ValidationError, ServiceError } from './extensions/error.ext';
 import config from './config.json';
@@ -9,9 +11,8 @@ const apiPath = config.apiPath;
 
 const server = Fastify({ logger: config.logger });
 
-// TODO: validate income request with fastify schema
-// TODO: throw 404 if the url is different
-
+server.register(middie);
+server.register(() => server.use(cors({ methods: 'POST' })));
 server.register(fastifyExtention);
 
 server.post(apiPath, async (request, response) => {
