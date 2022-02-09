@@ -15,5 +15,8 @@
 # Logs
 *.log*
 
+# SFDX
+.sfdx/
+
 # Test projects
 **/test-ws-server/**

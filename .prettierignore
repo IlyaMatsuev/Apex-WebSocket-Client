@@ -1,0 +1,14 @@
+# IDE
+**/.idea/
+
+# SFDX
+.sfdx/
+.localdevserver
+**/staticresources/**
+
+# Packages
+**/node_modules/**
+
+# Build
+**/build/**
+**/dist/**
