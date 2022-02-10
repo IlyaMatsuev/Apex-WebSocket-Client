@@ -1,0 +1,3 @@
+# Non-sfdx projects
+./src/ws-dispatcher/
+./src/test-ws-server/

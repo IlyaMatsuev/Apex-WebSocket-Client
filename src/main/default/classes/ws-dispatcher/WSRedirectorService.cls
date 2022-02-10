@@ -1,8 +1,16 @@
 public class WSRedirectorService {
+    private static WSDispatcherSetting__c dispatcherSetting {
+        get {
+            if (dispatcherSetting == null) {
+                dispatcherSetting = WSDispatcherSetting__c.getOrgDefaults();
+            }
+            return dispatcherSetting;
+        }
+        set;
+    }
+
     public static ResponsePayload connect(String endpoint, String protocol) {
-        return call(
-            new RequestPayload(RequestPayload.RequestCommand.Connect, endpoint, protocol)
-        );
+        return call(new RequestPayload(RequestPayload.RequestCommand.Connect, endpoint, protocol));
     }
 
     public static void listen(String clientId) {
@@ -37,9 +45,8 @@ public class WSRedirectorService {
 
     private static ResponsePayload call(RequestPayload payload) {
         HttpRequest request = new HttpRequest();
-        // TODO: Take endpoint, additional headers and timeout from the custom setting or metadata
-        request.setEndpoint('');
-        request.setTimeout(40000);
+        request.setEndpoint(dispatcherSetting.Endpoint__c);
+        request.setTimeout(dispatcherSetting.Timeout__c.intValue());
         request.setMethod('POST');
         request.setHeader('Content-Type', 'application/json');
         request.setBody(payload.toJson());
@@ -58,10 +65,7 @@ public class WSRedirectorService {
         }
 
         public void run() {
-            await(
-                this,
-                new RequestPayload(RequestPayload.RequestCommand.Listen, clientId)
-            );
+            await(this, new RequestPayload(RequestPayload.RequestCommand.Listen, clientId));
         }
     }
 
@@ -75,10 +79,7 @@ public class WSRedirectorService {
         }
 
         public void run() {
-            await(
-                this,
-                new RequestPayload(RequestPayload.RequestCommand.Message, clientId, message)
-            );
+            await(this, new RequestPayload(RequestPayload.RequestCommand.Message, clientId, message));
         }
     }
 }
