@@ -2,7 +2,7 @@
 
 TODO: Some badges here
 
-This is the Salesforce Apex library that is aimed to provide support for the websocket protocol. Which can be used directly from Apex runtime (not only via LWC JS).
+Salesforce Apex library that is aimed to provide support for the websocket protocol. Which can be used directly from Apex runtime (not only via LWC JS).
 
 Of course there is no native support for websocket in Apex yet. This project uses external server which redirects http requests as websocket messages.
 

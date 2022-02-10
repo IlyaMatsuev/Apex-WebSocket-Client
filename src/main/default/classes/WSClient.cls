@@ -1,11 +1,8 @@
 global class WSClient {
-
     // global void onMessage(MessageHandler handler) {
-
     // }
 
     // global void onClose(CloseHandler handler) {
-
     // }
 
     global Boolean connect(String endpoint) {

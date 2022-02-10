@@ -1,0 +1,26 @@
+{
+    "name": "apex-websocket",
+    "private": true,
+    "version": "1.0.0",
+    "description": "Salesforce Apex library that is aimed to provide support for the websocket protocol. Which can be used directly from Apex runtime (not only via LWC JS)",
+    "scripts": {
+        "prettier": "prettier --write \"**/*.{cls,js,json,md,trigger,xml,yaml,yml}\"",
+        "prettier:verify": "prettier --list-different \"**/*.{cls,js,json,md,trigger,xml,yaml,yml}\""
+    },
+    "devDependencies": {
+        "husky": "^4.2.1",
+        "lint-staged": "^10.0.7",
+        "prettier": "^2.0.5",
+        "prettier-plugin-apex": "^1.8.0"
+    },
+    "husky": {
+        "hooks": {
+            "pre-commit": "lint-staged"
+        }
+    },
+    "lint-staged": {
+        "**/*.{cls,js,json,md,trigger,xml,yaml,yml}": [
+            "prettier --write"
+        ]
+    }
+}
