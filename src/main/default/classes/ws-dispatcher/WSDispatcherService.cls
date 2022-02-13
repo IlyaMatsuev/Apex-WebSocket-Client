@@ -1,4 +1,4 @@
-public class WSRedirectorService {
+public class WSDispatcherService {
     private static WSDispatcherSetting__c dispatcherSetting {
         get {
             if (dispatcherSetting == null) {
@@ -13,11 +13,11 @@ public class WSRedirectorService {
         return call(new RequestPayload(RequestPayload.RequestCommand.Connect, endpoint, protocol));
     }
 
-    public static void listen(String clientId) {
+    public static void listen(String clientId, List<NotificationHandler> handlers) {
         AsyncContainer.run(new ListenDelegate(clientId));
     }
 
-    public static void message(String clientId, String message) {
+    public static void message(String clientId, String message, List<NotificationHandler> handlers) {
         AsyncContainer.run(new MessageDelegate(clientId, message));
     }
 
@@ -25,17 +25,21 @@ public class WSRedirectorService {
         return call(new RequestPayload(RequestPayload.RequestCommand.Close, clientId));
     }
 
-    private static void await(AsyncContainer.IDelegate delegate, RequestPayload payload) {
+    private static void await(
+        AsyncContainer.IDelegate delegate,
+        RequestPayload payload,
+        List<NotificationHandler> handlers
+    ) {
         ResponsePayload response = call(payload);
         switch on response.event {
-            when Message {
-                // TODO: Fire events somehow somewhere?
-            }
-            when Error {
-                // TODO: Fire events somehow somewhere?
-            }
-            when Close {
-                // TODO: Fire events somehow somewhere?
+            when Message, Error, Close {
+                List<WSUpdate__e> updates = new List<WSUpdate__e>();
+                for (NotificationHandler handler : handlers) {
+                    if (handler.ofType(response.event.name())) {
+                        updates.add(handler.toEvent());
+                    }
+                }
+                Eventbus.publish(updates);
             }
             when Timeout {
                 AsyncContainer.run(delegate);
@@ -59,27 +63,31 @@ public class WSRedirectorService {
 
     private class ListenDelegate implements AsyncContainer.IDelegate {
         private final String clientId;
+        private final List<NotificationHandler> handlers;
 
-        public ListenDelegate(String clientId) {
+        public ListenDelegate(String clientId, List<NotificationHandler> handlers) {
             this.clientId = clientId;
+            this.handlers = handlers;
         }
 
         public void run() {
-            await(this, new RequestPayload(RequestPayload.RequestCommand.Listen, clientId));
+            await(this, new RequestPayload(RequestPayload.RequestCommand.Listen, clientId), handlers);
         }
     }
 
     private class MessageDelegate implements AsyncContainer.IDelegate {
         private final String clientId;
         private final String message;
+        private final List<NotificationHandler> handlers;
 
-        public MessageDelegate(String clientId, String message) {
+        public MessageDelegate(String clientId, String message, List<NotificationHandler> handlers) {
             this.clientId = clientId;
             this.message = message;
+            this.handlers = handlers;
         }
 
         public void run() {
-            await(this, new RequestPayload(RequestPayload.RequestCommand.Message, clientId, message));
+            await(this, new RequestPayload(RequestPayload.RequestCommand.Message, clientId, message), handlers);
         }
     }
 }

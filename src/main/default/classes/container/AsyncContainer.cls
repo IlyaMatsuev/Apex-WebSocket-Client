@@ -1,7 +1,8 @@
 public class AsyncContainer {
-
     public static void run(IDelegate delegate) {
-        System.enqueueJob(new QueuableContainer(delegate));
+        if (Limits.getQueueableJobs() < Limits.getLimitQueueableJobs()) {
+            System.enqueueJob(new QueuableContainer(delegate));
+        }
     }
 
     private class QueuableContainer implements Queueable {
