@@ -4,7 +4,7 @@
     "private": "true",
     "description": "External server for redirecting http requests as websocket messages",
     "scripts": {
-        "start": "node 'dist/index.js'",
+        "start": "npm run build && node 'dist/index.js'",
         "build": "tsc && ncp src dist",
         "dev": "nodemon --exec ts-node src/index.ts"
     },

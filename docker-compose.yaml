@@ -1,0 +1,10 @@
+version: '3'
+services:
+    ws-dispatcher:
+        image: ilyamatsuev/ws-dispatcher
+        build:
+            context: ./src/ws-dispatcher
+            dockerfile: ./Dockerfile
+        container_name: ws-dispatcher
+        ports:
+            - '8000:8000'
