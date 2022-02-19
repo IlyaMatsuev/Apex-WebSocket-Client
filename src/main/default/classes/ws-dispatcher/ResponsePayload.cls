@@ -5,11 +5,15 @@ public class ResponsePayload {
 
     public ResponsePayload(ResponseEvent event, String message) {
         this.event = event;
-        this.messages = new List<String> { message };
+        this.messages = new List<String>{ message };
     }
 
     public Boolean isSuccess() {
-        return event == ResponseEvent.Error;
+        return event != ResponseEvent.Error;
+    }
+
+    public String getFirstMessage() {
+        return messages.isEmpty() ? null : messages.get(0);
     }
 
     public static ResponsePayload fromJson(String response) {

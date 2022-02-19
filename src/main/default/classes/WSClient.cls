@@ -1,35 +1,34 @@
 global class WSClient {
-    private final List<NotificationHandler> handlers = new List<NotificationHandler>();
+    private final List<WSHandlerWrapper> handlers = new List<WSHandlerWrapper>();
 
-    global void onMessage(String handlerClassName) {
-        onMessage(handlerClassName, null);
+    global WSClient onMessage(String handlerClassName) {
+        return onMessage(handlerClassName, null);
     }
 
-    global void onMessage(String handlerClassName, Map<String, Object> args) {
-        handlers.add(new NotificationHandler(NotificationHandler.NotificationType.Message, handlerClassName, args));
+    global WSClient onMessage(String handlerClassName, Map<String, Object> args) {
+        handlers.add(new WSHandlerWrapper(WSUpdateType.Message, handlerClassName, args));
+        return this;
     }
 
-    global void onClose(String handlerClassName) {
-        onClose(handlerClassName, null);
+    global WSClient onClose(String handlerClassName) {
+        return onClose(handlerClassName, null);
     }
 
-    global void onClose(String handlerClassName, Map<String, Object> args) {
-        handlers.add(new NotificationHandler(NotificationHandler.NotificationType.Close, handlerClassName, args));
+    global WSClient onClose(String handlerClassName, Map<String, Object> args) {
+        handlers.add(new WSHandlerWrapper(WSUpdateType.Close, handlerClassName, args));
+        return this;
     }
 
-    global Boolean connect(String endpoint) {
+    global WSConnection connect(String endpoint) {
         return connect(endpoint, null);
     }
 
-    global Boolean connect(String endpoint, String protocol) {
+    global WSConnection connect(String endpoint, String protocol) {
         ResponsePayload response = WSDispatcherService.connect(endpoint, protocol);
-
         if (!response.isSuccess()) {
-            return false;
+            throw new WSConnection.ConnectionException('Failed to connect: ' + response.getFirstMessage());
         }
-
-        WSDispatcherService.listen(response.clientId);
-
-        return true;
+        WSDispatcherService.listen(response.clientId, handlers);
+        return new WSConnection(response.clientId);
     }
 }
