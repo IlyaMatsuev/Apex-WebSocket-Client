@@ -15,6 +15,10 @@ server.register(middie);
 server.register(() => server.use(cors({ methods: 'POST' })));
 server.register(fastifyExtention);
 
+server.get('/', (_, response) => {
+    response.send(`Make a POST request towards ${apiPath} to start working with WebSockets`);
+});
+
 server.post(apiPath, async (request, response) => {
     try {
         response.send(await RequestDispatcher.dispatch(request.validateAndGetPayload()));
@@ -28,7 +32,7 @@ server.post(apiPath, async (request, response) => {
     }
 });
 
-server.listen(port, (err, address) => {
+server.listen(port, '0.0.0.0', (err, address) => {
     if (err) {
         server.log.error(err);
         process.exit(1);
