@@ -10,7 +10,7 @@ export default class ListenCommand implements ICommand {
 
             const timeoutTimer = setTimeout(() => {
                 this.removeListeners(client.id);
-                reply(['Timeout. Reconnect again'], 'timeout');
+                reply(['Timeout. Reconnect again'], ResponseEvent.Timeout);
             }, timeout);
 
             const reply = (data: string[], event: ResponseEvent): void => {
@@ -20,23 +20,23 @@ export default class ListenCommand implements ICommand {
             };
 
             if (client.errors.hasUnread) {
-                return reply(client.errors.getUnread(), 'error');
+                return reply(client.errors.getUnread(), ResponseEvent.Error);
             }
 
             if (client.messages.hasUnread) {
-                return reply(client.messages.getUnread(), 'message');
+                return reply(client.messages.getUnread(), ResponseEvent.Message);
             }
 
             if (!client.connected) {
                 store.removeClient(client.id);
-                return reply(['The connection is closed'], 'close');
+                return reply(['The connection is closed'], ResponseEvent.Close);
             }
 
-            store.once(`${client.id}-message`, message => reply([message.getText()], 'message'));
-            store.once(`${client.id}-error`, error => reply([error.getText()], 'error'));
+            store.once(`${client.id}-message`, message => reply([message.getText()], ResponseEvent.Message));
+            store.once(`${client.id}-error`, error => reply([error.getText()], ResponseEvent.Error));
             store.once(`${client.id}-close`, () => {
                 store.removeClient(client.id);
-                reply(['The connection is closed'], 'close');
+                reply(['The connection is closed'], ResponseEvent.Close);
             });
         });
     }

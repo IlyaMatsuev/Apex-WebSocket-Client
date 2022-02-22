@@ -1,27 +1,36 @@
-import { FastifyReply } from 'fastify';
-
 export interface ICommand {
     execute(request: RequestPayload): Promise<ResponsePayload>;
 }
 
-export type RequestCommand = 'connect' | 'listen' | 'message' | 'close';
+export enum RequestCommand {
+    Connect = 'connect',
+    Listen = 'listen',
+    Message = 'message',
+    Close = 'close'
+}
 
-export type ResponseEvent = 'connect' | 'timeout' | 'error' | 'message' | 'close';
+export enum ResponseEvent {
+    Connect = 'connect',
+    Timeout = 'timeout',
+    Error = 'error',
+    Message = 'message',
+    Close = 'close'
+}
 
 export interface IConnectRequestPayload {
-    command: 'connect';
+    command: RequestCommand.Connect;
     endpoint: string;
     protocol?: string;
 }
 
 export interface IMessageRequestPayload {
-    command: 'message';
+    command: RequestCommand.Message;
     clientId: string;
     message: string;
 }
 
 export interface IRequestPayload {
-    command: 'listen' | 'close';
+    command: RequestCommand.Listen | RequestCommand.Close;
     clientId: string;
 }
 

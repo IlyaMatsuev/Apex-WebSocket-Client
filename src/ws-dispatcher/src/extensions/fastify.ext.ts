@@ -1,7 +1,7 @@
 import { FastifyPluginAsync, FastifyRequest } from 'fastify';
 import fastifyPlugin from 'fastify-plugin';
 import { Store } from '../store/store';
-import { RequestPayload } from './../types';
+import { RequestPayload, RequestCommand } from './../types';
 import { ValidationError } from './error.ext';
 
 declare module 'fastify' {
@@ -15,11 +15,20 @@ const validateAndGetPayload = function (this: FastifyRequest): RequestPayload {
         throw new ValidationError(`Content-Type header must be passed as 'application/json'`);
     }
 
-    const payload = this.body as RequestPayload;
+    const payload = {
+        ...(this.body as RequestPayload),
+        command: ((this.body as any).command as string)?.toLowerCase() as RequestCommand
+    } as RequestPayload;
+
     if (!payload.command) {
         throw new ValidationError('No command has been provided');
     }
-    if (payload.command === 'connect') {
+
+    if (!Object.values(RequestCommand).includes(payload.command)) {
+        throw new ValidationError(`There is no such command: "${payload.command}"`);
+    }
+
+    if (payload.command === RequestCommand.Connect) {
         if (!payload.endpoint) {
             throw new ValidationError('The endpoint is required');
         }
@@ -30,7 +39,7 @@ const validateAndGetPayload = function (this: FastifyRequest): RequestPayload {
         throw new ValidationError(`Whether no client id has been provided or it's incorrect`);
     }
 
-    if (payload.command === 'message' && !payload.message) {
+    if (payload.command === RequestCommand.Message && !payload.message) {
         throw new ValidationError(`No message has been provided`);
     }
 

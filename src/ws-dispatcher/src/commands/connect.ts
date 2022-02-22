@@ -1,5 +1,5 @@
 import { client as WebSocket } from 'websocket';
-import { ICommand, IConnectRequestPayload, ResponsePayload } from '../types';
+import { ICommand, IConnectRequestPayload, ResponseEvent, ResponsePayload } from '../types';
 import { ServiceError } from '../extensions/error.ext';
 import { Store } from '../store/store';
 
@@ -18,7 +18,7 @@ export default class ConnectCommand implements ICommand {
                 resolve({
                     clientId: client.id,
                     messages: ['Connection established'],
-                    event: 'connect'
+                    event: ResponseEvent.Connect
                 });
             });
             wsClient.connect(request.endpoint, request.protocol);

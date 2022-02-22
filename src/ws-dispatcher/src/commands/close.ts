@@ -1,5 +1,5 @@
 import { Store } from '../store/store';
-import { ICommand, IRequestPayload, ResponsePayload } from '../types';
+import { ICommand, IRequestPayload, ResponseEvent, ResponsePayload } from '../types';
 
 export default class CloseCommand implements ICommand {
     public async execute(request: IRequestPayload): Promise<ResponsePayload> {
@@ -7,6 +7,6 @@ export default class CloseCommand implements ICommand {
         if (client.connected) {
             client.close(true);
         }
-        return { clientId: client.id, messages: ['The connection is closed'], event: 'close' };
+        return { clientId: client.id, messages: ['The connection is closed'], event: ResponseEvent.Close };
     }
 }

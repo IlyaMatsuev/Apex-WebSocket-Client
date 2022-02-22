@@ -24,10 +24,10 @@ server.post(apiPath, async (request, response) => {
         response.send(await RequestDispatcher.dispatch(request.validateAndGetPayload()));
     } catch (error) {
         if (error instanceof ValidationError || error instanceof ServiceError) {
-            response.status(400).send({ message: error.message, event: 'error' });
+            response.status(400).send({ messages: [error.message], event: 'error' });
         } else {
             server.log.error(`Error: ${error}`);
-            response.status(500).send({ message: 'Something is went wrong on the server side', event: 'error' });
+            response.status(500).send({ messages: ['Something is went wrong on the server side'], event: 'error' });
         }
     }
 });

@@ -2,11 +2,9 @@
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Timeout__c</fullName>
     <defaultValue>50000</defaultValue>
-    <description
-    >Calling timeout; Shouldn&apos;t be more than 60000 since this is an Apex async transaction limit</description>
+    <description>Calling timeout; Determines polling time for the WS Dispatcher</description>
     <externalId>false</externalId>
-    <inlineHelpText
-    >Calling timeout; Shouldn&apos;t be more than 60000 since this is an Apex async transaction limit</inlineHelpText>
+    <inlineHelpText>Calling timeout; Determines polling time for the WS Dispatcher</inlineHelpText>
     <label>Timeout</label>
     <precision>6</precision>
     <required>true</required>
