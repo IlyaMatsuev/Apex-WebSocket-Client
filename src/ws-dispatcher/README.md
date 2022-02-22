@@ -8,7 +8,7 @@ The server is running on Heroku at https://ws-dispatcher.herokuapp.com/ but I'd 
 
 ### With Heroku
 
-You can deploy the server to your own heroku account. I prepared two scripts for this purpose: `heroku-deploy.sh` and `heroku-update.sh`.
+You can deploy the server to your own heroku account. I prepared two scripts for this purpose: [`heroku-deploy.sh`](../../scripts/heroku-deploy.sh) and [`heroku-update.sh`](../../scripts/heroku-update.sh).
 
 Go to the `project root directory` and run:
 
@@ -57,4 +57,4 @@ Don't forget to update the `WSDispatcherSetting` custom settings if you use your
 ## API
 
 There is `openapi.json` which you can use to explore the WS Dispatcher API.
-Import `openapi.json` file [here](https://editor.swagger.io)
+Import [`openapi.json`](openapi.json) file [here](https://editor.swagger.io)
