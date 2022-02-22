@@ -1,0 +1,179 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "description": "This is a sample server for exploring the WS Dispatcher API",
+        "version": "1.0.0",
+        "title": "WS Dispatcher",
+        "contact": {
+            "email": "ilya.matsuev.personal@gmail.com"
+        },
+        "license": {
+            "name": "MIT",
+            "url": "https://github.com/IlyaMatsuev/Apex-WebSocket-Client/blob/main/LICENSE"
+        }
+    },
+    "servers": [
+        {
+            "url": "https://ws-dispatcher.herokuapp.com"
+        }
+    ],
+    "tags": [
+        {
+            "name": "ws",
+            "description": "Connect, listen and send messages to a WebSocket server"
+        }
+    ],
+    "paths": {
+        "/ws": {
+            "post": {
+                "tags": ["ws"],
+                "summary": "Connect, listen and send messages",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "oneOf": [
+                                    {
+                                        "$ref": "#/components/schemas/ConnectCommand"
+                                    },
+                                    {
+                                        "$ref": "#/components/schemas/ListenCommand"
+                                    },
+                                    {
+                                        "$ref": "#/components/schemas/MessageCommand"
+                                    },
+                                    {
+                                        "$ref": "#/components/schemas/CloseCommand"
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Response"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "ConnectCommand": {
+                "type": "object",
+                "description": "Connect to the WebSocket server",
+                "required": ["command", "endpoint"],
+                "properties": {
+                    "command": {
+                        "type": "string",
+                        "description": "Command which says what action the client wants to do with the WebSocket server",
+                        "example": "connect",
+                        "enum": ["connect", "listen", "message", "close"]
+                    },
+                    "endpoint": {
+                        "type": "string",
+                        "description": "The endpoint URL of the WebSocket server",
+                        "example": "wss://test-ws-server-123.herokuapp.com"
+                    },
+                    "protocol": {
+                        "type": "string",
+                        "description": "Any protocol for WS communication",
+                        "example": "graphql-transport-ws"
+                    }
+                }
+            },
+            "ListenCommand": {
+                "type": "object",
+                "description": "Listen to the WebSocket server for any updates",
+                "required": ["command", "clientId"],
+                "properties": {
+                    "command": {
+                        "type": "string",
+                        "description": "Command which says what action the client wants to do with the WebSocket server",
+                        "example": "listen",
+                        "enum": ["connect", "listen", "message", "close"]
+                    },
+                    "clientId": {
+                        "type": "string",
+                        "description": "The unique WebSocket client id",
+                        "example": "858cf4f3-ce07-4fb8-a8d3-2edac2f82315"
+                    }
+                }
+            },
+            "MessageCommand": {
+                "type": "object",
+                "description": "Send message to the WebSocket server",
+                "required": ["command", "clientId", "message"],
+                "properties": {
+                    "command": {
+                        "type": "string",
+                        "description": "Command which says what action the client wants to do with the WebSocket server",
+                        "example": "message",
+                        "enum": ["connect", "listen", "message", "close"]
+                    },
+                    "clientId": {
+                        "type": "string",
+                        "description": "The unique WebSocket client id",
+                        "example": "858cf4f3-ce07-4fb8-a8d3-2edac2f82315"
+                    },
+                    "message": {
+                        "type": "string",
+                        "description": "Message for the server",
+                        "example": "Hello World"
+                    }
+                }
+            },
+            "CloseCommand": {
+                "type": "object",
+                "description": "Send close request to the WebSocket server",
+                "required": ["command", "clientId"],
+                "properties": {
+                    "command": {
+                        "type": "string",
+                        "description": "Command which says what action the client wants to do with the WebSocket server",
+                        "example": "close",
+                        "enum": ["connect", "listen", "message", "close"]
+                    },
+                    "clientId": {
+                        "type": "string",
+                        "description": "The unique WebSocket client id",
+                        "example": "858cf4f3-ce07-4fb8-a8d3-2edac2f82315"
+                    }
+                }
+            },
+            "Response": {
+                "type": "object",
+                "properties": {
+                    "clientId": {
+                        "type": "string",
+                        "description": "The unique WebSocket client id",
+                        "example": "858cf4f3-ce07-4fb8-a8d3-2edac2f82315"
+                    },
+                    "event": {
+                        "type": "string",
+                        "description": "Reason of the response",
+                        "example": "connect",
+                        "enum": ["connect", "timeout", "error", "message", "close"]
+                    },
+                    "messages": {
+                        "type": "array",
+                        "description": "Status messages or messages from the WebSocket server",
+                        "items": {
+                            "type": "string"
+                        },
+                        "example": ["Connection established"]
+                    }
+                }
+            }
+        }
+    }
+}

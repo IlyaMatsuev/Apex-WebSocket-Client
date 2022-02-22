@@ -17,6 +17,7 @@ heroku container:login || { exit 1; }
 
 echo
 echo "${green}Pushing the image to heroku...${reset}"
+docker pull ilyamatsuev/ws-dispatcher
 docker tag ilyamatsuev/ws-dispatcher registry.heroku.com/${app_name}/web
 docker push registry.heroku.com/${app_name}/web || { exit 1; }
 
