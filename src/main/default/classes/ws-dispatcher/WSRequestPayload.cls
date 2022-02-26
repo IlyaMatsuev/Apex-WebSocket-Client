@@ -1,19 +1,15 @@
-public class RequestPayload {
+public class WSRequestPayload {
     public final RequestCommand command;
     public final String clientId;
     public final String message;
     public final String endpoint;
     public final String protocol;
 
-    public RequestPayload(RequestCommand command, String clientIdOrEndpoint) {
+    public WSRequestPayload(RequestCommand command, String clientIdOrEndpoint) {
         this(command, clientIdOrEndpoint, null);
     }
 
-    public RequestPayload(
-        RequestCommand command,
-        String clientIdOrEndpoint,
-        String messageOrProtocol
-    ) {
+    public WSRequestPayload(RequestCommand command, String clientIdOrEndpoint, String messageOrProtocol) {
         this.command = command;
         if (command == RequestCommand.Connect) {
             this.endpoint = clientIdOrEndpoint;

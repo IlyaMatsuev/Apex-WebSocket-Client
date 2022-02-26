@@ -16,14 +16,14 @@ global class WSConnection {
     }
 
     global void send(String message) {
-        ResponsePayload response = WSDispatcherService.message(clientId, message);
+        WSResponsePayload response = WSDispatcherService.message(clientId, message);
         if (!response.isSuccess()) {
             throw new ConnectionException('Failed to send a message: ' + response.getFirstMessage());
         }
     }
 
     global void close() {
-        ResponsePayload response = WSDispatcherService.close(clientId);
+        WSResponsePayload response = WSDispatcherService.close(clientId);
         if (!response.isSuccess()) {
             throw new ConnectionException('Failed to close the connection: ' + response.getFirstMessage());
         }

@@ -1,9 +1,9 @@
-public class ResponsePayload {
+public class WSResponsePayload {
     public final String clientId;
     public final ResponseEvent event;
     public final List<String> messages;
 
-    public ResponsePayload(ResponseEvent event, String message) {
+    public WSResponsePayload(ResponseEvent event, String message) {
         this.event = event;
         this.messages = new List<String>{ message };
     }
@@ -16,8 +16,8 @@ public class ResponsePayload {
         return messages.isEmpty() ? null : messages.get(0);
     }
 
-    public static ResponsePayload fromJson(String response) {
-        return (ResponsePayload) JSON.deserialize(response, ResponsePayload.class);
+    public static WSResponsePayload fromJson(String response) {
+        return (WSResponsePayload) JSON.deserialize(response, WSResponsePayload.class);
     }
 
     public enum ResponseEvent {

@@ -26,23 +26,23 @@ public class WSDispatcherService {
         }
     }
 
-    public static ResponsePayload connect(String endpoint, String protocol) {
-        return call(new RequestPayload(RequestPayload.RequestCommand.Connect, endpoint, protocol));
+    public static WSResponsePayload connect(String endpoint, String protocol) {
+        return call(new WSRequestPayload(WSRequestPayload.RequestCommand.Connect, endpoint, protocol));
     }
 
     public static void listen(String clientId, List<WSHandlerWrapper> handlers) {
         WSAsyncJob.run(new ListenJob(clientId, handlers));
     }
 
-    public static ResponsePayload message(String clientId, String message) {
-        return call(new RequestPayload(RequestPayload.RequestCommand.Message, clientId, message));
+    public static WSResponsePayload message(String clientId, String message) {
+        return call(new WSRequestPayload(WSRequestPayload.RequestCommand.Message, clientId, message));
     }
 
-    public static ResponsePayload close(String clientId) {
-        return call(new RequestPayload(RequestPayload.RequestCommand.Close, clientId));
+    public static WSResponsePayload close(String clientId) {
+        return call(new WSRequestPayload(WSRequestPayload.RequestCommand.Close, clientId));
     }
 
-    private static ResponsePayload call(RequestPayload payload) {
+    private static WSResponsePayload call(WSRequestPayload payload) {
         HttpRequest request = new HttpRequest();
         request.setEndpoint(endpoint);
         request.setTimeout(timeout);
@@ -51,9 +51,9 @@ public class WSDispatcherService {
         request.setBody(payload.toJson());
         HttpResponse response = new Http().send(request);
         if (response.getStatusCode() == 500) {
-            return new ResponsePayload(ResponsePayload.ResponseEvent.Error, response.getBody());
+            return new WSResponsePayload(WSResponsePayload.ResponseEvent.Error, response.getBody());
         }
-        return ResponsePayload.fromJson(response.getBody());
+        return WSResponsePayload.fromJson(response.getBody());
     }
 
     private class ListenJob extends WSAsyncJob {
@@ -66,12 +66,12 @@ public class WSDispatcherService {
         }
 
         public override void execute() {
-            ResponsePayload response = call(new RequestPayload(RequestPayload.RequestCommand.Listen, clientId));
+            WSResponsePayload response = call(new WSRequestPayload(WSRequestPayload.RequestCommand.Listen, clientId));
             if (!response.isSuccess()) {
                 throw new WSConnection.ConnectionException('Failed to listen: ' + response.getFirstMessage());
             }
 
-            if (response.event != ResponsePayload.ResponseEvent.Timeout) {
+            if (response.event != WSResponsePayload.ResponseEvent.Timeout) {
                 List<WSUpdate__e> updates = new List<WSUpdate__e>();
                 for (WSHandlerWrapper handler : handlers) {
                     if (handler.ofType(response.event.name())) {
@@ -81,14 +81,14 @@ public class WSDispatcherService {
                 Eventbus.publish(updates);
             }
 
-            if (response.event == ResponsePayload.ResponseEvent.Close) {
+            if (response.event == WSResponsePayload.ResponseEvent.Close) {
                 return;
             }
 
             again();
         }
 
-        private WSUpdate__e createUpdateEvent(ResponsePayload response, WSHandlerWrapper handler) {
+        private WSUpdate__e createUpdateEvent(WSResponsePayload response, WSHandlerWrapper handler) {
             return new WSUpdate__e(
                 ClientId__c = response.clientId,
                 Messages__c = JSON.serialize(response.messages),

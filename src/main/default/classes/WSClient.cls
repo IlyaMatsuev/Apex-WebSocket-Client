@@ -24,7 +24,7 @@ global class WSClient {
     }
 
     global WSConnection connect(String endpoint, String protocol) {
-        ResponsePayload response = WSDispatcherService.connect(endpoint, protocol);
+        WSResponsePayload response = WSDispatcherService.connect(endpoint, protocol);
         if (!response.isSuccess()) {
             throw new WSConnection.ConnectionException('Failed to connect: ' + response.getFirstMessage());
         }
