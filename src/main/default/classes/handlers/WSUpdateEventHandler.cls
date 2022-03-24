@@ -6,6 +6,7 @@ public class WSUpdateEventHandler extends WSAsyncJob {
     }
 
     public void handle() {
+        // Run in job because client possibly would send callouts from handler
         WSAsyncJob.run(this);
     }
 

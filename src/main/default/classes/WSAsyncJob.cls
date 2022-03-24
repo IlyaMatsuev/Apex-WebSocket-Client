@@ -1,4 +1,4 @@
-public abstract class WSAsyncJob implements Queueable {
+public abstract class WSAsyncJob implements Queueable, Database.AllowsCallouts {
     public void execute(QueueableContext context) {
         execute();
     }
@@ -9,7 +9,7 @@ public abstract class WSAsyncJob implements Queueable {
         if (Limits.getQueueableJobs() < Limits.getLimitQueueableJobs()) {
             System.enqueueJob(job);
         } else {
-            throw new LimitException('The hobs limit has been exceeded');
+            throw new LimitException('The jobs limit has been exceeded');
         }
     }
 }

@@ -1,6 +1,15 @@
 global class WSConnection {
     private final String clientId;
     private final List<String> messages;
+    private WSDispatcherService dispatcherService {
+        get {
+            if (dispatcherService == null) {
+                dispatcherService = new WSDispatcherService();
+            }
+            return dispatcherService;
+        }
+        set;
+    }
 
     public WSConnection(String clientId) {
         this(clientId, new List<String>());
@@ -11,24 +20,30 @@ global class WSConnection {
         this.messages = messages;
     }
 
+    global String getClientId() {
+        return clientId;
+    }
+
     global List<String> getUpdates() {
         return messages;
     }
 
     global void send(String message) {
-        WSResponsePayload response = WSDispatcherService.message(clientId, message);
-        if (!response.isSuccess()) {
-            throw new ConnectionException('Failed to send a message: ' + response.getFirstMessage());
+        WSResponsePayload response = dispatcherService.message(clientId, message);
+        if (!response.success) {
+            throw new ConnectionException('Failed to send a message: ' + response.firstMessage);
         }
     }
 
     global void close() {
-        WSResponsePayload response = WSDispatcherService.close(clientId);
-        if (!response.isSuccess()) {
-            throw new ConnectionException('Failed to close the connection: ' + response.getFirstMessage());
+        // TODO: If I close it from connection, should all close handlers be ran?
+        // Also, need to cancel the listen job if it's still running
+        WSResponsePayload response = dispatcherService.close(clientId);
+        if (!response.success) {
+            throw new ConnectionException('Failed to close the connection: ' + response.firstMessage);
         }
     }
 
-    global class ConnectionException extends Exception {
+    public class ConnectionException extends Exception {
     }
 }

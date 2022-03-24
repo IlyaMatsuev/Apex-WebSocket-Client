@@ -3,17 +3,16 @@ public class WSResponsePayload {
     public final ResponseEvent event;
     public final List<String> messages;
 
-    public WSResponsePayload(ResponseEvent event, String message) {
-        this.event = event;
-        this.messages = new List<String>{ message };
+    public String firstMessage {
+        get {
+            return messages.isEmpty() ? null : messages.get(0);
+        }
     }
 
-    public Boolean isSuccess() {
-        return event != ResponseEvent.Error;
-    }
-
-    public String getFirstMessage() {
-        return messages.isEmpty() ? null : messages.get(0);
+    public Boolean success {
+        get {
+            return event != ResponseEvent.Error;
+        }
     }
 
     public static WSResponsePayload fromJson(String response) {

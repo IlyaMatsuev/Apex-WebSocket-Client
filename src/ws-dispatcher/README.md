@@ -56,5 +56,5 @@ Don't forget to update the `WSDispatcherSetting` custom settings if you use your
 
 ## API
 
-There is `openapi.json` which you can use to explore the WS Dispatcher API.
+There is `openapi.json` file which can be used to explore the WS Dispatcher API.
 Import [`openapi.json`](openapi.json) file [here](https://editor.swagger.io)

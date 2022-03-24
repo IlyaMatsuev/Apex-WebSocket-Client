@@ -11,11 +11,7 @@ public class WSHandlerWrapper {
     }
 
     public Boolean ofType(String type) {
-        try {
-            return updateType == WSUpdateType.valueOf(type);
-        } catch (NoSuchElementException e) {
-            return false;
-        }
+        return updateType.name() == type;
     }
 
     private void validateHandlerClass(String handlerClassName) {

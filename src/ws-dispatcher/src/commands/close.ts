@@ -7,6 +7,6 @@ export default class CloseCommand implements ICommand {
         if (client.connected) {
             client.close(true);
         }
-        return { clientId: client.id, messages: ['The connection is closed'], event: ResponseEvent.Close };
+        return { clientId: client.id, messages: ['Connection closed'], event: ResponseEvent.Close };
     }
 }
