@@ -6,7 +6,7 @@ global class WSClient {
     }
 
     global WSClient onMessage(String handlerClassName, Map<String, Object> args) {
-        handlers.add(new WSHandlerWrapper(WSUpdateType.Message, handlerClassName, args));
+        handlers.add(new WSHandlerWrapper(WSHandlerWrapper.UpdateType.Message, handlerClassName, args));
         return this;
     }
 
@@ -15,7 +15,7 @@ global class WSClient {
     }
 
     global WSClient onClose(String handlerClassName, Map<String, Object> args) {
-        handlers.add(new WSHandlerWrapper(WSUpdateType.Close, handlerClassName, args));
+        handlers.add(new WSHandlerWrapper(WSHandlerWrapper.UpdateType.Close, handlerClassName, args));
         return this;
     }
 
@@ -29,7 +29,9 @@ global class WSClient {
         if (!response.success) {
             throw new WSConnection.ConnectionException('Failed to connect: ' + response.firstMessage);
         }
-        dispatcherService.listen(response.clientId, handlers);
+        if (!handlers.isEmpty()) {
+            dispatcherService.listen(response.clientId, handlers);
+        }
         return new WSConnection(response.clientId);
     }
 }

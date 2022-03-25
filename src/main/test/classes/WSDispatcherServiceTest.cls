@@ -112,7 +112,7 @@ public class WSDispatcherServiceTest {
 
     @IsTest
     private static void listenCommandTimeoutAndCloseResponseTest() {
-        FakeEventPublisher eventPublisher = new FakeEventPublisher();
+        MockEventPublisher eventPublisher = new MockEventPublisher();
         Test.setMock(
             HttpCalloutMock.class,
             new WSDispatcherHttpMock(WSResponsePayload.ResponseEvent.Timeout, 'Timeout. Reconnect again')
@@ -123,14 +123,22 @@ public class WSDispatcherServiceTest {
             .listen(
                 CLIENT_ID,
                 new List<WSHandlerWrapper>{
-                    new WSHandlerWrapper(WSUpdateType.Close, 'WSDispatcherServiceTest.MockUpdateHandler', null)
+                    new WSHandlerWrapper(
+                        WSHandlerWrapper.UpdateType.Close,
+                        'WSDispatcherServiceTest.MockUpdateHandler',
+                        null
+                    )
                 }
             );
         Test.stopTest();
 
         System.assertEquals(1, eventPublisher.updates.size(), 'There should be only one update event');
         System.assertEquals(CLIENT_ID, eventPublisher.updates.get(0).ClientId__c, 'Client ids do not match');
-        System.assertEquals(WSUpdateType.Close.name(), eventPublisher.updates.get(0).Type__c, 'Type should be "Close"');
+        System.assertEquals(
+            WSHandlerWrapper.UpdateType.Close.name(),
+            eventPublisher.updates.get(0).Type__c,
+            'Type should be "Close"'
+        );
         System.assertEquals(
             'WSDispatcherServiceTest.MockUpdateHandler',
             eventPublisher.updates.get(0).HandlerClassName__c,
@@ -151,7 +159,7 @@ public class WSDispatcherServiceTest {
     @IsTest
     private static void listenCommandMessageResponseTest() {
         String message = 'Hello World!';
-        FakeEventPublisher eventPublisher = new FakeEventPublisher();
+        MockEventPublisher eventPublisher = new MockEventPublisher();
         Test.setMock(HttpCalloutMock.class, new WSDispatcherHttpMock(WSResponsePayload.ResponseEvent.Message, message));
         Test.startTest();
         WSDispatcherService.eventPublisher = eventPublisher;
@@ -159,8 +167,16 @@ public class WSDispatcherServiceTest {
             .listen(
                 CLIENT_ID,
                 new List<WSHandlerWrapper>{
-                    new WSHandlerWrapper(WSUpdateType.Message, 'WSDispatcherServiceTest.MockUpdateHandler', null),
-                    new WSHandlerWrapper(WSUpdateType.Close, 'WSDispatcherServiceTest.MockUpdateHandler', null)
+                    new WSHandlerWrapper(
+                        WSHandlerWrapper.UpdateType.Message,
+                        'WSDispatcherServiceTest.MockUpdateHandler',
+                        null
+                    ),
+                    new WSHandlerWrapper(
+                        WSHandlerWrapper.UpdateType.Close,
+                        'WSDispatcherServiceTest.MockUpdateHandler',
+                        null
+                    )
                 }
             );
         Test.stopTest();
@@ -169,11 +185,15 @@ public class WSDispatcherServiceTest {
         System.assertEquals(CLIENT_ID, eventPublisher.updates.get(0).ClientId__c, 'Client ids do not match');
         System.assertEquals(CLIENT_ID, eventPublisher.updates.get(1).ClientId__c, 'Client ids do not match');
         System.assertEquals(
-            WSUpdateType.Message.name(),
+            WSHandlerWrapper.UpdateType.Message.name(),
             eventPublisher.updates.get(0).Type__c,
             'Type should be "Message"'
         );
-        System.assertEquals(WSUpdateType.Close.name(), eventPublisher.updates.get(1).Type__c, 'Type should be "Close"');
+        System.assertEquals(
+            WSHandlerWrapper.UpdateType.Close.name(),
+            eventPublisher.updates.get(1).Type__c,
+            'Type should be "Close"'
+        );
         List<String> messages = new List<String>();
         messages.addAll((List<String>) JSON.deserialize(eventPublisher.updates.get(0).Messages__c, List<String>.class));
         messages.addAll((List<String>) JSON.deserialize(eventPublisher.updates.get(1).Messages__c, List<String>.class));
@@ -238,7 +258,7 @@ public class WSDispatcherServiceTest {
     private static void messageHandlerWithInvalidClassNameTest() {
         Exception error;
         try {
-            new WSHandlerWrapper(WSUpdateType.Message, 'FakeClassName', null);
+            new WSHandlerWrapper(WSHandlerWrapper.UpdateType.Message, 'FakeClassName', null);
         } catch (Exception ex) {
             error = ex;
         }
@@ -263,7 +283,7 @@ public class WSDispatcherServiceTest {
         }
     }
 
-    private class FakeEventPublisher extends WSEventPublisher {
+    private class MockEventPublisher extends WSEventPublisher {
         public final List<WSUpdate__e> updates = new List<WSUpdate__e>();
 
         public override void publish(List<SObject> events) {

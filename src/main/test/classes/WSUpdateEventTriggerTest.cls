@@ -24,7 +24,7 @@ public class WSUpdateEventTriggerTest {
         return new WSUpdate__e(
             ClientId__c = id,
             Messages__c = JSON.serialize(new List<String>{ message }),
-            Type__c = WSUpdateType.Message.name(),
+            Type__c = WSHandlerWrapper.UpdateType.Message.name(),
             HandlerClassName__c = 'WSUpdateEventTriggerTest.MockUpdateHandler',
             Arguments__c = JSON.serialize(args)
         );
