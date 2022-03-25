@@ -1,6 +1,6 @@
 public class WSDispatcherService {
     @TestVisible
-    private static WSEventPublisher eventPublisher = new WSEventPublisher();
+    private static EventPublisher eventPublisher = new EventPublisher();
 
     public WSResponsePayload connect(String endpoint, String protocol) {
         return call(new WSRequestPayload(WSRequestPayload.RequestCommand.Connect, endpoint, protocol));
@@ -78,6 +78,14 @@ public class WSDispatcherService {
             } else {
                 execute();
             }
+        }
+    }
+
+    // Needed for testing purpose
+    @TestVisible
+    private virtual class EventPublisher {
+        public virtual void publish(List<SObject> events) {
+            EventBus.publish(events);
         }
     }
 }

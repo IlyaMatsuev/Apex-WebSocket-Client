@@ -274,8 +274,8 @@ public class WSDispatcherServiceTest {
 
     @IsTest
     private static void eventPublisherTest() {
-        // This test method is only needed for covering WSEventPublisher class since there is no logic
-        new WSEventPublisher().publish(new List<WSUpdate__e>());
+        // This test method is only needed for covering WSDispatcherService.EventPublisher class since there is no logic
+        new WSDispatcherService.EventPublisher().publish(new List<WSUpdate__e>());
     }
 
     public class MockUpdateHandler extends WSMessageHandler {
@@ -283,7 +283,7 @@ public class WSDispatcherServiceTest {
         }
     }
 
-    private class MockEventPublisher extends WSEventPublisher {
+    private class MockEventPublisher extends WSDispatcherService.EventPublisher {
         public final List<WSUpdate__e> updates = new List<WSUpdate__e>();
 
         public override void publish(List<SObject> events) {

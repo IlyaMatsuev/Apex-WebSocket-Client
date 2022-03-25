@@ -37,10 +37,6 @@
         <enabled>true</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>WSEventPublisher</apexClass>
-        <enabled>true</enabled>
-    </classAccesses>
-    <classAccesses>
         <apexClass>WSHandlerWrapper</apexClass>
         <enabled>true</enabled>
     </classAccesses>

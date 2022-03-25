@@ -66,7 +66,7 @@ public class WSClientTest {
         }
     }
 
-    private class MockEventPublisher extends WSEventPublisher {
+    private class MockEventPublisher extends WSDispatcherService.EventPublisher {
         public final List<WSUpdate__e> updates = new List<WSUpdate__e>();
 
         public override void publish(List<SObject> events) {
