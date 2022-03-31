@@ -24,13 +24,12 @@ global class WSClient {
     }
 
     global WSConnection connect(String endpoint, String protocol) {
-        WSDispatcherService dispatcherService = new WSDispatcherService();
-        WSResponsePayload response = dispatcherService.connect(endpoint, protocol);
+        WSResponsePayload response = WSDispatcherService.connect(endpoint, protocol);
         if (!response.success) {
             throw new WSConnection.ConnectionException('Failed to connect: ' + response.firstMessage);
         }
         if (!handlers.isEmpty()) {
-            dispatcherService.listen(response.clientId, handlers);
+            WSDispatcherService.listenAsync(response.clientId, handlers);
         }
         return new WSConnection(response.clientId);
     }

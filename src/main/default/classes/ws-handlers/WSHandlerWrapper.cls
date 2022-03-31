@@ -16,11 +16,11 @@ public class WSHandlerWrapper {
 
     private void validateHandlerClass(String handlerClassName) {
         Object handler = Type.forName(handlerClassName)?.newInstance();
-        if (handler == null || !(handler instanceof WSMessageHandler)) {
+        if (handler == null || !(handler instanceof WSIMessageHandler)) {
             throw new TypeException(
                 'The provided handler class name "' +
                 handlerClassName +
-                '" doesn\'t exist or it doesn\'t extend the WSMessageHandler class'
+                '" doesn\'t exist or it doesn\'t implement the WSIMessageHandler interface'
             );
         }
     }

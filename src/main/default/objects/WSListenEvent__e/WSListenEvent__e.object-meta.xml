@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <deploymentStatus>Deployed</deploymentStatus>
+    <description>Event for starting a new listen job in order to receive updates from a WebSocket server</description>
+    <eventType>HighVolume</eventType>
+    <label>WS Listen Event</label>
+    <pluralLabel>WS Listen Events</pluralLabel>
+    <publishBehavior>PublishAfterCommit</publishBehavior>
+</CustomObject>

@@ -49,7 +49,7 @@ public class WSClientTest {
         MockEventPublisher eventPublisher = new MockEventPublisher();
         Test.setMock(HttpCalloutMock.class, new WSDispatcherHttpMock(WSResponsePayload.ResponseEvent.Message, message));
         Test.startTest();
-        WSDispatcherService.eventPublisher = eventPublisher;
+        WSListenEventHandler.eventPublisher = eventPublisher;
         WSConnection connection = new WSClient()
             .onMessage('WSClientTest.MockUpdateHandler')
             .onClose('WSClientTest.MockUpdateHandler')
@@ -61,16 +61,16 @@ public class WSClientTest {
         // Even Test.startTest(), Test.startTest() and Test.getEventBus().deliver() don't work with this scenario
     }
 
-    public class MockUpdateHandler extends WSMessageHandler {
-        public override void handle(WSConnection connection, Map<String, Object> args) {
+    public class MockUpdateHandler implements WSIMessageHandler {
+        public void handle(WSConnection connection, Map<String, Object> args) {
         }
     }
 
-    private class MockEventPublisher extends WSDispatcherService.EventPublisher {
-        public final List<WSUpdate__e> updates = new List<WSUpdate__e>();
+    private class MockEventPublisher extends WSListenEventHandler.EventPublisher {
+        public final List<WSUpdateEvent__e> updates = new List<WSUpdateEvent__e>();
 
         public override void publish(List<SObject> events) {
-            updates.addAll((List<WSUpdate__e>) events);
+            updates.addAll((List<WSUpdateEvent__e>) events);
         }
     }
 }

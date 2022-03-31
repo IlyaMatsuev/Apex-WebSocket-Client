@@ -1,6 +1,6 @@
 public class WSDispatcherSettings {
     public static final Integer HTTP_MAX_TIMEOUT = 120000;
-    public static final Integer CPU_TIME_SCOPE = 3000;
+    public static final Integer CPU_TIME_SCOPE = 5000;
 
     @TestVisible
     private static WSDispatcherSetting__c settings = WSDispatcherSetting__c.getOrgDefaults();

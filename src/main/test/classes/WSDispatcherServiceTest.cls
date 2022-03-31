@@ -15,7 +15,7 @@ public class WSDispatcherServiceTest {
     private static void connectCommandTest() {
         Test.setMock(HttpCalloutMock.class, new WSDispatcherHttpMock());
         Test.startTest();
-        WSResponsePayload response = new WSDispatcherService().connect('wss://fake.ws.endpoint/', null);
+        WSResponsePayload response = WSDispatcherService.connect('wss://fake.ws.endpoint/', null);
         Test.stopTest();
 
         System.assert(String.isNotBlank(response.clientId), 'Client id should be set after connection');
@@ -30,7 +30,7 @@ public class WSDispatcherServiceTest {
             new WSDispatcherHttpMock(WSResponsePayload.ResponseEvent.Error, 'Failed to connect: invalid address')
         );
         Test.startTest();
-        WSResponsePayload response = new WSDispatcherService().connect('wss://fake.ws.endpoint/', null);
+        WSResponsePayload response = WSDispatcherService.connect('wss://fake.ws.endpoint/', null);
         Test.stopTest();
 
         System.assert(String.isBlank(response.clientId), 'Client id should not be returned');
@@ -46,7 +46,7 @@ public class WSDispatcherServiceTest {
     private static void messageCommandTest() {
         Test.setMock(HttpCalloutMock.class, new WSDispatcherHttpMock());
         Test.startTest();
-        WSResponsePayload response = new WSDispatcherService().message(CLIENT_ID, 'Hello World!');
+        WSResponsePayload response = WSDispatcherService.message(CLIENT_ID, 'Hello World!');
         Test.stopTest();
 
         System.assertEquals(CLIENT_ID, response.clientId, 'Client id is not correct');
@@ -64,7 +64,7 @@ public class WSDispatcherServiceTest {
             )
         );
         Test.startTest();
-        WSResponsePayload response = new WSDispatcherService().message(CLIENT_ID, 'Hello World!');
+        WSResponsePayload response = WSDispatcherService.message(CLIENT_ID, 'Hello World!');
         Test.stopTest();
 
         System.assert(String.isBlank(response.clientId), 'Client id should not be returned');
@@ -80,7 +80,7 @@ public class WSDispatcherServiceTest {
     private static void closeCommandTest() {
         Test.setMock(HttpCalloutMock.class, new WSDispatcherHttpMock());
         Test.startTest();
-        WSResponsePayload response = new WSDispatcherService().close(CLIENT_ID);
+        WSResponsePayload response = WSDispatcherService.close(CLIENT_ID);
         Test.stopTest();
 
         System.assertEquals(CLIENT_ID, response.clientId, 'Client id is not correct');
@@ -98,7 +98,7 @@ public class WSDispatcherServiceTest {
             )
         );
         Test.startTest();
-        WSResponsePayload response = new WSDispatcherService().close(CLIENT_ID);
+        WSResponsePayload response = WSDispatcherService.close(CLIENT_ID);
         Test.stopTest();
 
         System.assert(String.isBlank(response.clientId), 'Client id should not be returned');
@@ -111,25 +111,40 @@ public class WSDispatcherServiceTest {
     }
 
     @IsTest
-    private static void listenCommandTimeoutAndCloseResponseTest() {
+    private static void listenCommandWithMessageTest() {
+        Test.setMock(
+            HttpCalloutMock.class,
+            new WSDispatcherHttpMock(WSResponsePayload.ResponseEvent.Message, 'Hello World!')
+        );
+        Test.startTest();
+        WSResponsePayload response = WSDispatcherService.listen(CLIENT_ID);
+        Test.stopTest();
+
+        System.assertEquals(CLIENT_ID, response.clientId, 'Client id is not correct');
+        System.assertEquals('Message', response.event.name(), '"Message" event should be returned');
+        System.assertEquals('Hello World!', response.firstMessage, 'Response message is not correct');
+    }
+
+    @IsTest
+    private static void listenAsyncCommandTimeoutAndCloseResponseTest() {
         MockEventPublisher eventPublisher = new MockEventPublisher();
         Test.setMock(
             HttpCalloutMock.class,
             new WSDispatcherHttpMock(WSResponsePayload.ResponseEvent.Timeout, 'Timeout. Reconnect again')
         );
         Test.startTest();
-        WSDispatcherService.eventPublisher = eventPublisher;
-        new WSDispatcherService()
-            .listen(
-                CLIENT_ID,
-                new List<WSHandlerWrapper>{
-                    new WSHandlerWrapper(
-                        WSHandlerWrapper.UpdateType.Close,
-                        'WSDispatcherServiceTest.MockUpdateHandler',
-                        null
-                    )
-                }
-            );
+        WSListenEventHandler.eventPublisher = eventPublisher;
+        WSDispatcherService.listenAsync(
+            CLIENT_ID,
+            new List<WSHandlerWrapper>{
+                new WSHandlerWrapper(
+                    WSHandlerWrapper.UpdateType.Close,
+                    'WSDispatcherServiceTest.MockUpdateHandler',
+                    null
+                )
+            }
+        );
+        Test.getEventBus().deliver();
         Test.stopTest();
 
         System.assertEquals(1, eventPublisher.updates.size(), 'There should be only one update event');
@@ -157,28 +172,28 @@ public class WSDispatcherServiceTest {
     }
 
     @IsTest
-    private static void listenCommandMessageResponseTest() {
+    private static void listenAsyncCommandMessageResponseTest() {
         String message = 'Hello World!';
         MockEventPublisher eventPublisher = new MockEventPublisher();
         Test.setMock(HttpCalloutMock.class, new WSDispatcherHttpMock(WSResponsePayload.ResponseEvent.Message, message));
         Test.startTest();
-        WSDispatcherService.eventPublisher = eventPublisher;
-        new WSDispatcherService()
-            .listen(
-                CLIENT_ID,
-                new List<WSHandlerWrapper>{
-                    new WSHandlerWrapper(
-                        WSHandlerWrapper.UpdateType.Message,
-                        'WSDispatcherServiceTest.MockUpdateHandler',
-                        null
-                    ),
-                    new WSHandlerWrapper(
-                        WSHandlerWrapper.UpdateType.Close,
-                        'WSDispatcherServiceTest.MockUpdateHandler',
-                        null
-                    )
-                }
-            );
+        WSListenEventHandler.eventPublisher = eventPublisher;
+        WSDispatcherService.listenAsync(
+            CLIENT_ID,
+            new List<WSHandlerWrapper>{
+                new WSHandlerWrapper(
+                    WSHandlerWrapper.UpdateType.Message,
+                    'WSDispatcherServiceTest.MockUpdateHandler',
+                    null
+                ),
+                new WSHandlerWrapper(
+                    WSHandlerWrapper.UpdateType.Close,
+                    'WSDispatcherServiceTest.MockUpdateHandler',
+                    null
+                )
+            }
+        );
+        Test.getEventBus().deliver();
         Test.stopTest();
 
         System.assertEquals(2, eventPublisher.updates.size(), 'There should be two update events');
@@ -214,7 +229,8 @@ public class WSDispatcherServiceTest {
         Exception error;
         try {
             Test.startTest();
-            new WSDispatcherService().listen(CLIENT_ID, new List<WSHandlerWrapper>());
+            WSDispatcherService.listenAsync(CLIENT_ID, new List<WSHandlerWrapper>());
+            Test.getEventBus().deliver();
             Test.stopTest();
         } catch (Exception ex) {
             error = ex;
@@ -266,7 +282,7 @@ public class WSDispatcherServiceTest {
         System.assert(error != null, 'Exception should have been thrown');
         System.assert(error instanceof TypeException, 'Exception type is not correct');
         System.assertEquals(
-            'The provided handler class name "FakeClassName" doesn\'t exist or it doesn\'t extend the WSMessageHandler class',
+            'The provided handler class name "FakeClassName" doesn\'t exist or it doesn\'t implement the WSIMessageHandler interface',
             error.getMessage(),
             'Exception message is not correct'
         );
@@ -274,20 +290,20 @@ public class WSDispatcherServiceTest {
 
     @IsTest
     private static void eventPublisherTest() {
-        // This test method is only needed for covering WSDispatcherService.EventPublisher class since there is no logic
-        new WSDispatcherService.EventPublisher().publish(new List<WSUpdate__e>());
+        // This test method is only needed for covering WSListenEventHandler.EventPublisher class since there is no logic
+        new WSListenEventHandler.EventPublisher().publish(new List<WSListenEvent__e>());
     }
 
-    public class MockUpdateHandler extends WSMessageHandler {
-        public override void handle(WSConnection connection, Map<String, Object> args) {
+    public class MockUpdateHandler implements WSIMessageHandler {
+        public void handle(WSConnection connection, Map<String, Object> args) {
         }
     }
 
-    private class MockEventPublisher extends WSDispatcherService.EventPublisher {
-        public final List<WSUpdate__e> updates = new List<WSUpdate__e>();
+    private class MockEventPublisher extends WSListenEventHandler.EventPublisher {
+        public final List<WSUpdateEvent__e> updates = new List<WSUpdateEvent__e>();
 
         public override void publish(List<SObject> events) {
-            updates.addAll((List<WSUpdate__e>) events);
+            updates.addAll((List<WSUpdateEvent__e>) events);
         }
     }
 }
