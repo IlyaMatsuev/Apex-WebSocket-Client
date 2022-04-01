@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Timeout__c</fullName>
-    <defaultValue>50000</defaultValue>
+    <defaultValue>30000</defaultValue>
     <description>Calling timeout; Determines polling time for the WS Dispatcher</description>
     <externalId>false</externalId>
     <inlineHelpText>Calling timeout; Determines polling time for the WS Dispatcher</inlineHelpText>

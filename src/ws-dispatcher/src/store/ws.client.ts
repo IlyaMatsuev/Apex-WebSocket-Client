@@ -2,6 +2,7 @@ import { connection, Message } from 'websocket';
 import { Store, StoreEventType } from './store';
 import WsMessage from './ws.message';
 import WsMessageCollection from './ws.message.collection';
+import { clientDeleteTimeout } from './../config.json';
 
 export default class WsClient {
     public readonly errors: WsMessageCollection = new WsMessageCollection();
@@ -31,11 +32,9 @@ export default class WsClient {
         }
     }
 
-    public close(force: boolean = false): void {
-        if (force) {
-            this.connection.removeAllListeners().close();
-            Store.getStore().removeClient(this.id);
-        }
+    public close(): void {
+        this.connection.removeAllListeners().close();
+        setTimeout(() => Store.getStore().removeClient(this.id), clientDeleteTimeout);
         this.emit('close');
     }
 

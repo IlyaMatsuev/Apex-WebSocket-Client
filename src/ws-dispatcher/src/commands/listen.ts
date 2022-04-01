@@ -1,5 +1,6 @@
 import { ICommand, IRequestPayload, ResponseEvent, ResponsePayload } from '../types';
 import { Store } from '../store/store';
+import { logger } from '..';
 import { timeout } from './../config.json';
 
 export default class ListenCommand implements ICommand {
@@ -14,6 +15,7 @@ export default class ListenCommand implements ICommand {
             }, timeout);
 
             const reply = (data: string[], event: ResponseEvent): void => {
+                logger.info(`Reply with event: ${event}`);
                 clearTimeout(timeoutTimer);
                 this.removeListeners(client.id);
                 resolve({ clientId: client.id, messages: [...data], event });
@@ -28,16 +30,12 @@ export default class ListenCommand implements ICommand {
             }
 
             if (!client.connected) {
-                store.removeClient(client.id);
                 return reply(['The connection is closed'], ResponseEvent.Close);
             }
 
             store.once(`${client.id}-message`, message => reply([message.getText()], ResponseEvent.Message));
             store.once(`${client.id}-error`, error => reply([error.getText()], ResponseEvent.Error));
-            store.once(`${client.id}-close`, () => {
-                store.removeClient(client.id);
-                reply(['The connection is closed'], ResponseEvent.Close);
-            });
+            store.once(`${client.id}-close`, () => reply(['The connection is closed'], ResponseEvent.Close));
         });
     }
 

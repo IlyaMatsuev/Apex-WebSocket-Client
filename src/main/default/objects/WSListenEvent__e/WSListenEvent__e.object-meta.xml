@@ -5,5 +5,5 @@
     <eventType>HighVolume</eventType>
     <label>WS Listen Event</label>
     <pluralLabel>WS Listen Events</pluralLabel>
-    <publishBehavior>PublishAfterCommit</publishBehavior>
+    <publishBehavior>PublishImmediately</publishBehavior>
 </CustomObject>

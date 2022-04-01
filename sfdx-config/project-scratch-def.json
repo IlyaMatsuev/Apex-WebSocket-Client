@@ -1,6 +1,7 @@
 {
     "orgName": "WS Apex Client",
     "edition": "Developer",
+    "hasSampleData": false,
     "features": [],
     "settings": {
         "lightningExperienceSettings": {

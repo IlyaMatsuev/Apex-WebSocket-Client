@@ -18,13 +18,18 @@ public class WSListenEventHandler extends WSEventHandler {
         private final String clientId;
         private final List<WSHandlerWrapper> handlers;
 
+        private Long calloutTime = 0;
+
         public ListenJob(String clientId, List<WSHandlerWrapper> handlers) {
             this.clientId = clientId;
             this.handlers = handlers;
         }
 
         public override void execute() {
+            DateTime calloutStart = DateTime.now();
             WSResponsePayload response = WSDispatcherService.listen(clientId);
+            calloutTime += DateTime.now().getTime() - calloutStart.getTime();
+
             if (!response.success) {
                 // TODO: Should I publish error events?
                 throw new WSConnection.ConnectionException('Failed to listen: ' + response.firstMessage);
@@ -56,7 +61,6 @@ public class WSListenEventHandler extends WSEventHandler {
         }
 
         private void again() {
-            // TODO: Maybe just publish listen event every time?
             if (isUnderCalloutCountLimit() && isUnderCalloutTimeLimit() && isUnderCpuTimeLimit()) {
                 execute();
             } else {
@@ -69,8 +73,7 @@ public class WSListenEventHandler extends WSEventHandler {
         }
 
         private Boolean isUnderCalloutTimeLimit() {
-            return WSDispatcherSettings.getTimeout() * (Limits.getCallouts() + 1) <=
-                WSDispatcherSettings.HTTP_MAX_TIMEOUT;
+            return calloutTime + WSDispatcherSettings.getTimeout() <= WSDispatcherSettings.HTTP_MAX_TIMEOUT;
         }
 
         private Boolean isUnderCpuTimeLimit() {

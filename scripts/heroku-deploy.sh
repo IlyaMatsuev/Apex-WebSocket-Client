@@ -28,4 +28,4 @@ echo "${green}Running the container...${reset}"
 heroku container:release web -a "$app_name" || { exit 1; }
 
 echo
-echo "${green}Done. You can find the new app by https://${app_name}.herokuapp.com/${reset}"
+echo "${green}Done. You can find the new app at https://${app_name}.herokuapp.com/${reset}"
