@@ -5,7 +5,7 @@ public class WSResponsePayload {
 
     public String firstMessage {
         get {
-            return messages.isEmpty() ? null : messages.get(0);
+            return messages?.isEmpty() == false ? messages.get(0) : null;
         }
     }
 

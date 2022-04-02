@@ -138,7 +138,7 @@ public class WSDispatcherServiceTest {
             CLIENT_ID,
             new List<WSHandlerWrapper>{
                 new WSHandlerWrapper(
-                    WSHandlerWrapper.UpdateType.Close,
+                    WSHandlerWrapper.EventType.Close,
                     'WSDispatcherServiceTest.MockUpdateHandler',
                     null
                 )
@@ -149,11 +149,6 @@ public class WSDispatcherServiceTest {
 
         System.assertEquals(1, eventPublisher.updates.size(), 'There should be only one update event');
         System.assertEquals(CLIENT_ID, eventPublisher.updates.get(0).ClientId__c, 'Client ids do not match');
-        System.assertEquals(
-            WSHandlerWrapper.UpdateType.Close.name(),
-            eventPublisher.updates.get(0).Type__c,
-            'Type should be "Close"'
-        );
         System.assertEquals(
             'WSDispatcherServiceTest.MockUpdateHandler',
             eventPublisher.updates.get(0).HandlerClassName__c,
@@ -182,12 +177,12 @@ public class WSDispatcherServiceTest {
             CLIENT_ID,
             new List<WSHandlerWrapper>{
                 new WSHandlerWrapper(
-                    WSHandlerWrapper.UpdateType.Message,
+                    WSHandlerWrapper.EventType.Message,
                     'WSDispatcherServiceTest.MockUpdateHandler',
                     null
                 ),
                 new WSHandlerWrapper(
-                    WSHandlerWrapper.UpdateType.Close,
+                    WSHandlerWrapper.EventType.Close,
                     'WSDispatcherServiceTest.MockUpdateHandler',
                     null
                 )
@@ -199,16 +194,6 @@ public class WSDispatcherServiceTest {
         System.assertEquals(2, eventPublisher.updates.size(), 'There should be two update events');
         System.assertEquals(CLIENT_ID, eventPublisher.updates.get(0).ClientId__c, 'Client ids do not match');
         System.assertEquals(CLIENT_ID, eventPublisher.updates.get(1).ClientId__c, 'Client ids do not match');
-        System.assertEquals(
-            WSHandlerWrapper.UpdateType.Message.name(),
-            eventPublisher.updates.get(0).Type__c,
-            'Type should be "Message"'
-        );
-        System.assertEquals(
-            WSHandlerWrapper.UpdateType.Close.name(),
-            eventPublisher.updates.get(1).Type__c,
-            'Type should be "Close"'
-        );
         List<String> messages = new List<String>();
         messages.addAll((List<String>) JSON.deserialize(eventPublisher.updates.get(0).Messages__c, List<String>.class));
         messages.addAll((List<String>) JSON.deserialize(eventPublisher.updates.get(1).Messages__c, List<String>.class));
@@ -274,7 +259,7 @@ public class WSDispatcherServiceTest {
     private static void messageHandlerWithInvalidClassNameTest() {
         Exception error;
         try {
-            new WSHandlerWrapper(WSHandlerWrapper.UpdateType.Message, 'FakeClassName', null);
+            new WSHandlerWrapper(WSHandlerWrapper.EventType.Message, 'FakeClassName', null);
         } catch (Exception ex) {
             error = ex;
         }

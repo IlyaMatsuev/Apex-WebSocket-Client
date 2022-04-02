@@ -1,17 +1,17 @@
 public class WSHandlerWrapper {
-    public final UpdateType updateType;
+    public final EventType eventType;
     public final String className;
     public final Map<String, Object> args;
 
-    public WSHandlerWrapper(UpdateType updateType, String className, Map<String, Object> args) {
+    public WSHandlerWrapper(EventType eventType, String className, Map<String, Object> args) {
         validateHandlerClass(className);
-        this.updateType = updateType;
+        this.eventType = eventType;
         this.className = className;
         this.args = args == null ? new Map<String, Object>() : args;
     }
 
     public Boolean ofType(String type) {
-        return updateType.name() == type;
+        return eventType.name() == type;
     }
 
     private void validateHandlerClass(String handlerClassName) {
@@ -25,7 +25,7 @@ public class WSHandlerWrapper {
         }
     }
 
-    public enum UpdateType {
+    public enum EventType {
         Message,
         Error,
         Close

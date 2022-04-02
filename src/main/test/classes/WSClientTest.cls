@@ -44,14 +44,18 @@ public class WSClientTest {
     }
 
     @IsTest
-    private static void connectWithMessageAndCloseHandlersTest() {
+    private static void connectWithMessageAndErrorAndCloseHandlersTest() {
         String message = 'Hello World!';
         MockEventPublisher eventPublisher = new MockEventPublisher();
         Test.setMock(HttpCalloutMock.class, new WSDispatcherHttpMock(WSResponsePayload.ResponseEvent.Message, message));
         Test.startTest();
         WSListenEventHandler.eventPublisher = eventPublisher;
         WSConnection connection = new WSClient()
+            .onMessage(WSClientTest.MockUpdateHandler.class)
             .onMessage('WSClientTest.MockUpdateHandler')
+            .onError(WSClientTest.MockUpdateHandler.class)
+            .onError('WSClientTest.MockUpdateHandler')
+            .onClose(WSClientTest.MockUpdateHandler.class)
             .onClose('WSClientTest.MockUpdateHandler')
             .connect('wss://fake.ws.endpoint/');
         Test.getEventBus().deliver();

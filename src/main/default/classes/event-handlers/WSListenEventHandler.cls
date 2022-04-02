@@ -30,11 +30,6 @@ public class WSListenEventHandler extends WSEventHandler {
             WSResponsePayload response = WSDispatcherService.listen(clientId);
             calloutTime += DateTime.now().getTime() - calloutStart.getTime();
 
-            if (!response.success) {
-                // TODO: Should I publish error events?
-                throw new WSConnection.ConnectionException('Failed to listen: ' + response.firstMessage);
-            }
-
             if (response.event != WSResponsePayload.ResponseEvent.Timeout) {
                 List<WSUpdateEvent__e> updates = new List<WSUpdateEvent__e>();
                 for (WSHandlerWrapper handler : handlers) {
@@ -42,11 +37,14 @@ public class WSListenEventHandler extends WSEventHandler {
                         updates.add(createUpdateEvent(response, handler));
                     }
                 }
+                if (!response.success && updates.isEmpty()) {
+                    throw new WSConnection.ConnectionException('Failed to listen: ' + response.firstMessage);
+                }
                 eventPublisher.publish(updates);
             }
 
             if (response.event != WSResponsePayload.ResponseEvent.Close) {
-                again();
+                listenAgain();
             }
         }
 
@@ -54,13 +52,12 @@ public class WSListenEventHandler extends WSEventHandler {
             return new WSUpdateEvent__e(
                 ClientId__c = response.clientId,
                 Messages__c = JSON.serialize(response.messages),
-                Type__c = handler.updateType.name(),
                 HandlerClassName__c = handler.className,
                 Arguments__c = JSON.serialize(handler.args)
             );
         }
 
-        private void again() {
+        private void listenAgain() {
             if (isUnderCalloutCountLimit() && isUnderCalloutTimeLimit() && isUnderCpuTimeLimit()) {
                 execute();
             } else {
@@ -81,8 +78,6 @@ public class WSListenEventHandler extends WSEventHandler {
         }
     }
 
-    // TODO: Do I really need it?
-    // Needed for testing purpose
     @TestVisible
     private virtual class EventPublisher {
         public virtual void publish(List<SObject> events) {

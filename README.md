@@ -12,6 +12,8 @@ The source code and some tips regarding the server maintenance can be found [her
 
 TODO
 
+TODO: Also include some summary on how many platform events are aproximately fired with this lib
+
 ## Installation & Configuration
 
 TODO

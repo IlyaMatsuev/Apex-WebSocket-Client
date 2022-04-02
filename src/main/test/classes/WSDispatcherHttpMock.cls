@@ -49,7 +49,6 @@ public class WSDispatcherHttpMock implements HttpCalloutMock {
                 return getResponseObject(request.clientId, 'close', 'Connection closed');
             }
             when else {
-                // TODO: Do I really need this?
                 throw new WSDispatcherHttpMockException('There is no such command: "' + request.command.name() + '"');
             }
         }

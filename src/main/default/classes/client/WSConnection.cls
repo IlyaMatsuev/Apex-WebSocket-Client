@@ -27,14 +27,12 @@ global class WSConnection {
     }
 
     global void close() {
-        // TODO: If I close it from connection, should all close handlers be ran?
-        // Also, need to cancel the listen job if it's still running
         WSResponsePayload response = WSDispatcherService.close(clientId);
         if (!response.success) {
             throw new ConnectionException('Failed to close the connection: ' + response.firstMessage);
         }
     }
 
-    public class ConnectionException extends Exception {
+    global class ConnectionException extends Exception {
     }
 }

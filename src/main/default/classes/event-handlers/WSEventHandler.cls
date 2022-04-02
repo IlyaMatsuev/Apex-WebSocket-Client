@@ -5,14 +5,13 @@ public abstract class WSEventHandler {
         this.events = events;
     }
 
-    // TODO: Double check the logic to prevent recursive running
     public virtual void handle() {
         List<SObject> anotherChunk = new List<SObject>();
-        for (Integer i = 0; i < events.size(); i++) {
-            if (i < Limits.getLimitQueueableJobs()) {
-                WSAsyncJob.run(createJob(events.get(i)));
+        for (SObject event : events) {
+            if (Limits.getQueueableJobs() < Limits.getLimitQueueableJobs()) {
+                WSAsyncJob.run(createJob(event));
             } else {
-                anotherChunk.add(events.get(i));
+                anotherChunk.add(event);
             }
         }
         EventBus.publish(anotherChunk);

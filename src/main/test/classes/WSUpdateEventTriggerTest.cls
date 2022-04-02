@@ -36,7 +36,9 @@ public class WSUpdateEventTriggerTest {
         System.assertEquals(
             Limits.getLimitQueueableJobs(),
             newAccounts.size(),
-            'Handler should have been called 50 times'
+            'Handler should have been called ' +
+            Limits.getLimitQueueableJobs() +
+            ' times'
         );
     }
 
@@ -52,7 +54,6 @@ public class WSUpdateEventTriggerTest {
         return new WSUpdateEvent__e(
             ClientId__c = id,
             Messages__c = JSON.serialize(new List<String>{ message }),
-            Type__c = WSHandlerWrapper.UpdateType.Message.name(),
             HandlerClassName__c = 'WSUpdateEventTriggerTest.MockUpdateHandler',
             Arguments__c = JSON.serialize(args)
         );
