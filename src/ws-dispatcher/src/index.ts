@@ -7,7 +7,7 @@ import { ValidationError, ServiceError } from './extensions/error.ext';
 import config from './config.json';
 
 const port = process.env.PORT || config.port;
-const apiPath = config.apiPath;
+const apiPath = process.env.API_PATH || config.apiPath;
 
 const server = Fastify({ logger: config.logger });
 

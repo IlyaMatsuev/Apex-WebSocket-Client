@@ -1,7 +1,9 @@
 import { ICommand, IRequestPayload, ResponseEvent, ResponsePayload } from '../types';
 import { Store } from '../store/store';
 import { logger } from '..';
-import { timeout } from './../config.json';
+import { listenTimeout } from './../config.json';
+
+const timeout = Number(process.env.LISTEN_TIMEOUT) || listenTimeout;
 
 export default class ListenCommand implements ICommand {
     public execute(request: IRequestPayload): Promise<ResponsePayload> {

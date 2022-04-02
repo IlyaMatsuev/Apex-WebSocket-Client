@@ -4,6 +4,8 @@ import WsMessage from './ws.message';
 import WsMessageCollection from './ws.message.collection';
 import { clientDeleteTimeout } from './../config.json';
 
+const clientClearTimeout = Number(process.env.CLIENT_DELETE_TIMEOUT) || clientDeleteTimeout;
+
 export default class WsClient {
     public readonly errors: WsMessageCollection = new WsMessageCollection();
     public readonly messages: WsMessageCollection = new WsMessageCollection();
@@ -34,7 +36,7 @@ export default class WsClient {
 
     public close(): void {
         this.connection.removeAllListeners().close();
-        setTimeout(() => Store.getStore().removeClient(this.id), clientDeleteTimeout);
+        setTimeout(() => Store.getStore().removeClient(this.id), clientClearTimeout);
         this.emit('close');
     }
 

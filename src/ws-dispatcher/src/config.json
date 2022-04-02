@@ -1,7 +1,7 @@
 {
     "port": 8000,
     "apiPath": "/ws",
-    "timeout": 40000,
+    "listenTimeout": 40000,
     "clientDeleteTimeout": 60000,
     "logger": {
         "prettyPrint": {
