@@ -1,7 +1,13 @@
+#!/bin/sh
+
+# This script creates a new scratch org with deployed and configured package
+# The script requires at least 2 parameters: devhub username/alias and new scratch org alias
+# Example: sh ./scripts/pkg-from-scratch.sh dev.hub@test.com test.scratch@test.com
+
 red=`tput setaf 1`
 green=`tput setaf 2`
 reset=`tput sgr0`
-default_scratch_duration=30
+default_scratch_duration=10
 
 devhub_alias=$1
 scratch_alias=$2

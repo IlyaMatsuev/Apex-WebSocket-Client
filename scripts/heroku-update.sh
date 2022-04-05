@@ -1,3 +1,8 @@
+#!/bin/sh
+
+# This script pushes the last ws-dispatcher docker image to the heroku app by provided name
+# Example: sh ./scripts/heroku-update.sh my-own-ws-dispatcher
+
 red=`tput setaf 1`
 green=`tput setaf 2`
 reset=`tput sgr0`

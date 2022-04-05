@@ -1,3 +1,8 @@
+#!/bin/sh
+
+# This script deploys and configures the SF source part to the organization by the provided username or alias
+# Example: sh ./scripts/pkg-deploy.sh test.sandbox@test.com
+
 red=`tput setaf 1`
 green=`tput setaf 2`
 reset=`tput sgr0`

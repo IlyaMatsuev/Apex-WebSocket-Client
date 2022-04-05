@@ -1,3 +1,9 @@
+#!/bin/sh
+
+# This script creates a new heroku application by the provided name
+# And pushes the ws-dispatcher docker image to the just created heroku app
+# Example: sh ./scripts/heroku-deploy.sh my-own-ws-dispatcher
+
 red=`tput setaf 1`
 green=`tput setaf 2`
 reset=`tput sgr0`
