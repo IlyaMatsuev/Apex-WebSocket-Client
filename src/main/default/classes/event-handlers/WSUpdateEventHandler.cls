@@ -20,7 +20,7 @@ public class WSUpdateEventHandler extends WSEventHandler {
                 (List<String>) JSON.deserialize(event.Messages__c, List<String>.class)
             );
             Map<String, Object> args = (Map<String, Object>) JSON.deserializeUntyped(event.Arguments__c);
-            WSIMessageHandler handler = (WSIMessageHandler) Type.forName(event.HandlerClassName__c).newInstance();
+            IWSMessageHandler handler = (IWSMessageHandler) Type.forName(event.HandlerClassName__c).newInstance();
             handler.handle(connection, args);
         }
     }

@@ -267,7 +267,7 @@ public class WSDispatcherServiceTest {
         System.assert(error != null, 'Exception should have been thrown');
         System.assert(error instanceof TypeException, 'Exception type is not correct');
         System.assertEquals(
-            'The provided handler class name "FakeClassName" doesn\'t exist or it doesn\'t implement the WSIMessageHandler interface',
+            'The provided handler class name "FakeClassName" doesn\'t exist or it doesn\'t implement the IWSMessageHandler interface',
             error.getMessage(),
             'Exception message is not correct'
         );
@@ -279,7 +279,7 @@ public class WSDispatcherServiceTest {
         new WSListenEventHandler.EventPublisher().publish(new List<WSListenEvent__e>());
     }
 
-    public class MockUpdateHandler implements WSIMessageHandler {
+    public class MockUpdateHandler implements IWSMessageHandler {
         public void handle(WSConnection connection, Map<String, Object> args) {
         }
     }

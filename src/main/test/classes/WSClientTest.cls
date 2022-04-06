@@ -65,7 +65,7 @@ public class WSClientTest {
         // Even Test.startTest(), Test.startTest() and Test.getEventBus().deliver() don't work with this scenario
     }
 
-    public class MockUpdateHandler implements WSIMessageHandler {
+    public class MockUpdateHandler implements IWSMessageHandler {
         public void handle(WSConnection connection, Map<String, Object> args) {
         }
     }

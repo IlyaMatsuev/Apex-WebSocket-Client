@@ -59,7 +59,7 @@ public class WSUpdateEventTriggerTest {
         );
     }
 
-    public class MockUpdateHandler implements WSIMessageHandler {
+    public class MockUpdateHandler implements IWSMessageHandler {
         public void handle(WSConnection connection, Map<String, Object> args) {
             insert new Account(Name = connection.getClientId(), Description = JSON.serialize(args));
         }

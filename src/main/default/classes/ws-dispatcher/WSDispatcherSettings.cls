@@ -13,6 +13,7 @@ public class WSDispatcherSettings {
         return settingValue;
     }
 
+    // TODO: Don't use max timeout, set default value at 30000
     public static Integer getTimeout() {
         Integer settingValue = settings.Timeout__c?.intValue();
         if (settingValue == null || settingValue > HTTP_MAX_TIMEOUT) {
