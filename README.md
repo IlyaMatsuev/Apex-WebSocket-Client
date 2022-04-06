@@ -4,16 +4,14 @@
 
 Salesforce Apex library that is aimed to provide support for the WebSocket protocol. Which can be used directly from Apex runtime (not only via LWC JS).
 
-Of course there is no native support for WebSocket in Apex yet. This project uses external server which redirects HTTP requests as WebSocket messages.
-
-The source code and some tips regarding the server maintenance can be found [here](src/ws-dispatcher).
+Of course, there is no native support for WebSocket in Apex yet. This project uses an external server that redirects HTTP requests as WebSocket messages.
 
 ## Overview
 
-In order to handle WebSocket events you need to create a handler class that is going to handle incoming messages, errors or connection closing:
+To handle WebSocket events you need to create a handler class that is going to handle incoming messages, errors, or connection closing:
 
 ```java
-public class WebSocketMessageHandler implements WSIMessageHandler {
+public class WebSocketMessageHandler implements IWSMessageHandler {
     public void handle(WSConnection connection, Map<String, Object> args) {
         // Get the new incoming messages (if there are any)
         List<String> newMessages = connection.getUpdates();
@@ -44,10 +42,10 @@ connection.send('Hello World!');
 connection.close();
 ```
 
-For more examples, please refer [here](docs/examples).
+For more examples, please refer to [here](docs/examples).
 
-**Be aware, that this package uses a lot of Platform Events and Queueable Apex jobs in order to make things work. It can affect your org's [governor limits](https://developer.salesforce.com/docs/atlas.en-us.234.0.platform_events.meta/platform_events/platform_event_limits.htm)**  
-_Let's say we receive a new message every 10 seconds. For a minute of established connection it submits aproximately 2-4 Queueable Apex jobs and fires 6-18 Platform Events (depending on the amount of registered handlers)._
+**Be aware, that this package uses a lot of Platform Events and Queueable Apex jobs to make things work. It can affect your organization's [governor limits](https://developer.salesforce.com/docs/atlas.en-us.234.0.platform_events.meta/platform_events/platform_event_limits.htm)**  
+_Let's say we receive a new message every 10 seconds. For a minute of an established connection, it submits approximately 2-4 Queueable Apex jobs and fires 6-18 Platform Events (depending on the amount of registered handlers)._
 
 ## Installation
 
@@ -73,22 +71,18 @@ First is for deploying changes to the existing org.
 Second is for creating a new configured scratch org.
 
 ```
-./scripts/pkg-from-scratch.sh <devhub_username_or_alias> <new_scratch_org__alias>
+./scripts/pkg-from-scratch.sh <devhub_username_or_alias> <new_scratch_org_alias>
 ```
 
 ## Configuration
 
-The library can be used as it is without any additional configuration, or it can be used with your own server running (which is recommended). For more details about how to run your own server instance [visit page](src/ws-dispatcher).
+The library can be used as it is without any additional configuration, or it can be used with your own server running (which is recommended). For more details about how to run your server instance visit [this page](src/ws-dispatcher).
 
-Also, don't forget to assign the `ApexWSClientUser` permission set to the necessary users and update `WSDispatcherSetting__c` custom settings.
-
-[comment]: # 'TODO: Add link to the WSDispatcherSetting documentation'
+Also, don't forget to assign the `ApexWSClientUser` permission set to the necessary users and update the [`WSDispatcherSetting__c`](docs/README.md#wsdispatchersettingc) custom settings.
 
 ## Documentation
 
 For more detailed information about the content of the repository and sfdx package, please visit [docs folder](docs).
-
-Deployment of the external server is described [here](src/ws-dispatcher).
 
 ## Questions
 

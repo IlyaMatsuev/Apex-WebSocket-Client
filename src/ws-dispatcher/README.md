@@ -1,6 +1,6 @@
 # WS-Dispatcher
 
-This is the Fastify server which redirects HTTP requests as WebSocket messages to the WebSocket server. When it recieves any updates from the server, it replies the HTTP response with the received messages.
+This is the Fastify server which redirects HTTP requests as WebSocket messages to the WebSocket server. When it receives any updates from the server, it replies to the HTTP response with the received messages.
 
 ## Deploy & Run
 
@@ -8,17 +8,17 @@ The server is running on Heroku at https://ws-dispatcher.herokuapp.com/ but I'd 
 
 ### With Heroku
 
-You can deploy the server to your own heroku account. I prepared two scripts for this purpose: [`heroku-deploy.sh`](../../scripts/heroku-deploy.sh) and [`heroku-update.sh`](../../scripts/heroku-update.sh).
+You can deploy the server to your own Heroku account. I prepared two scripts for this purpose: [`heroku-deploy.sh`](../../scripts/heroku-deploy.sh) and [`heroku-update.sh`](../../scripts/heroku-update.sh).
 
 Go to the project `root directory` and run:
 
--   If you'd like to deploy server to a new heroku app
+-   If you'd like to deploy server to a new Heroku app
 
 ```
 ./scripts/heroku-deploy.sh <app_name>
 ```
 
--   If you'd like to deploy server to the existing heroku app
+-   If you'd like to deploy server to the existing Heroku app
 
 ```
 ./scripts/heroku-update.sh <app_name>
@@ -34,11 +34,9 @@ docker pull ilyamatsuev/ws-dispatcher
 
 #### NOTE
 
-[comment]: # 'TODO: Add link to the WSDispatcherSetting documentation'
-
-Don't forget to update the `WSDispatcherSetting` custom settings and `Remote Site Settings` if you use your own heroku app or any other platform.
+Don't forget to update the [`WSDispatcherSetting`](../../docs/README.md#wsdispatchersettingc) custom settings and Remote Site Settings if you use your own Heroku app or any other platform.
 
 ## API
 
-There is only one endpoint so far. However, there is `openapi.json` file which can be used to explore the WS Dispatcher API.
+There is only one endpoint so far. However, there is the `openapi.json` file that can be used to explore the WS Dispatcher API.
 Import [`openapi.json`](openapi.json) file [here](https://editor.swagger.io)
