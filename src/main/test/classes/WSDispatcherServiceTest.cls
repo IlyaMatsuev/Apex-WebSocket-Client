@@ -139,7 +139,7 @@ public class WSDispatcherServiceTest {
             new List<WSHandlerWrapper>{
                 new WSHandlerWrapper(
                     WSHandlerWrapper.EventType.Close,
-                    'WSDispatcherServiceTest.MockUpdateHandler',
+                    WSDispatcherServiceTest.MockUpdateHandler.class,
                     null
                 )
             }
@@ -178,12 +178,12 @@ public class WSDispatcherServiceTest {
             new List<WSHandlerWrapper>{
                 new WSHandlerWrapper(
                     WSHandlerWrapper.EventType.Message,
-                    'WSDispatcherServiceTest.MockUpdateHandler',
+                    WSDispatcherServiceTest.MockUpdateHandler.class,
                     null
                 ),
                 new WSHandlerWrapper(
                     WSHandlerWrapper.EventType.Close,
-                    'WSDispatcherServiceTest.MockUpdateHandler',
+                    WSDispatcherServiceTest.MockUpdateHandler.class,
                     null
                 )
             }
@@ -256,10 +256,10 @@ public class WSDispatcherServiceTest {
     }
 
     @IsTest
-    private static void messageHandlerWithInvalidClassNameTest() {
+    private static void messageHandlerWithInvalidClassTypeTest() {
         Exception error;
         try {
-            new WSHandlerWrapper(WSHandlerWrapper.EventType.Message, 'FakeClassName', null);
+            new WSHandlerWrapper(WSHandlerWrapper.EventType.Message, null, null);
         } catch (Exception ex) {
             error = ex;
         }
@@ -267,7 +267,7 @@ public class WSDispatcherServiceTest {
         System.assert(error != null, 'Exception should have been thrown');
         System.assert(error instanceof TypeException, 'Exception type is not correct');
         System.assertEquals(
-            'The provided handler class name "FakeClassName" doesn\'t exist or it doesn\'t implement the IWSMessageHandler interface',
+            'The provided handler class "null" doesn\'t exist or it doesn\'t implement the IWSMessageHandler interface',
             error.getMessage(),
             'Exception message is not correct'
         );

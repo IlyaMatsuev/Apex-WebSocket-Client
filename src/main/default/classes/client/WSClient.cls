@@ -5,48 +5,24 @@ global class WSClient {
         return onMessage(handlerClassType, null);
     }
 
-    global WSClient onMessage(String handlerClassName) {
-        return onMessage(handlerClassName, null);
-    }
-
     global WSClient onMessage(Type handlerClassType, Map<String, Object> args) {
-        return onMessage(handlerClassType.getName(), args);
-    }
-
-    global WSClient onMessage(String handlerClassName, Map<String, Object> args) {
-        return onEvent(WSHandlerWrapper.EventType.Message, handlerClassName, args);
+        return onEvent(WSHandlerWrapper.EventType.Message, handlerClassType, args);
     }
 
     global WSClient onError(Type handlerClassType) {
         return onError(handlerClassType, null);
     }
 
-    global WSClient onError(String handlerClassName) {
-        return onError(handlerClassName, null);
-    }
-
     global WSClient onError(Type handlerClassType, Map<String, Object> args) {
-        return onError(handlerClassType.getName(), args);
-    }
-
-    global WSClient onError(String handlerClassName, Map<String, Object> args) {
-        return onEvent(WSHandlerWrapper.EventType.Error, handlerClassName, args);
+        return onEvent(WSHandlerWrapper.EventType.Error, handlerClassType, args);
     }
 
     global WSClient onClose(Type handlerClassType) {
         return onClose(handlerClassType, null);
     }
 
-    global WSClient onClose(String handlerClassName) {
-        return onClose(handlerClassName, null);
-    }
-
     global WSClient onClose(Type handlerClassType, Map<String, Object> args) {
-        return onClose(handlerClassType.getName(), args);
-    }
-
-    global WSClient onClose(String handlerClassName, Map<String, Object> args) {
-        return onEvent(WSHandlerWrapper.EventType.Close, handlerClassName, args);
+        return onEvent(WSHandlerWrapper.EventType.Close, handlerClassType, args);
     }
 
     global WSConnection connect(String endpoint) {
@@ -64,12 +40,8 @@ global class WSClient {
         return new WSConnection(response.clientId);
     }
 
-    private WSClient onEvent(
-        WSHandlerWrapper.EventType handlerType,
-        String handlerClassName,
-        Map<String, Object> args
-    ) {
-        handlers.add(new WSHandlerWrapper(handlerType, handlerClassName, args));
+    private WSClient onEvent(WSHandlerWrapper.EventType handlerType, Type handlerClassType, Map<String, Object> args) {
+        handlers.add(new WSHandlerWrapper(handlerType, handlerClassType, args));
         return this;
     }
 }

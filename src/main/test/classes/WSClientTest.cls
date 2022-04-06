@@ -52,11 +52,8 @@ public class WSClientTest {
         WSListenEventHandler.eventPublisher = eventPublisher;
         WSConnection connection = new WSClient()
             .onMessage(WSClientTest.MockUpdateHandler.class)
-            .onMessage('WSClientTest.MockUpdateHandler')
             .onError(WSClientTest.MockUpdateHandler.class)
-            .onError('WSClientTest.MockUpdateHandler')
             .onClose(WSClientTest.MockUpdateHandler.class)
-            .onClose('WSClientTest.MockUpdateHandler')
             .connect('wss://fake.ws.endpoint/');
         Test.getEventBus().deliver();
         Test.stopTest();
