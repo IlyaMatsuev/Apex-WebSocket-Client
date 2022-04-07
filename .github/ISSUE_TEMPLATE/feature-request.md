@@ -4,7 +4,6 @@ about: Suggest an idea for this project
 title: ''
 labels: enhancement
 assignees: IlyaMatsuev
-
 ---
 
 ### What is missing from the application? Please describe.
