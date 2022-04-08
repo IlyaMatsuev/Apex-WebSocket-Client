@@ -1,6 +1,7 @@
 # Apex WebSocket Client
 
-[comment]: # 'TODO: Some badges here'
+[![Scratch org CI](https://github.com/IlyaMatsuev/Apex-WebSocket-Client/actions/workflows/scratch-org-ci.yml/badge.svg?branch=main)](https://github.com/IlyaMatsuev/Apex-WebSocket-Client/actions/workflows/scratch-org-ci.yml)
+[![codecov](https://codecov.io/gh/IlyaMatsuev/Apex-WebSocket-Client/branch/main/graph/badge.svg?token=PSRCUDWM3P)](https://codecov.io/gh/IlyaMatsuev/Apex-WebSocket-Client)
 
 Salesforce Apex library that is aimed to provide support for the WebSocket protocol. Which can be used directly from Apex runtime (not only via LWC JS).
 
