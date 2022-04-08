@@ -1,7 +1,7 @@
 {
     "packageDirectories": [
         {
-            "path": "./src",
+            "path": "./src/main",
             "package": "ws-apex-client",
             "versionName": "Version 1.0",
             "versionNumber": "1.0.0.0",
@@ -11,5 +11,9 @@
     "name": "ws-apex-client",
     "namespace": "",
     "sfdcLoginUrl": "https://login.salesforce.com",
-    "sourceApiVersion": "52.0"
+    "sourceApiVersion": "52.0",
+    "packageAliases": {
+        "ws-apex-client": "0Ho5Y000000wkR3SAI",
+        "ws-apex-client@1.0.0-0": "04t5Y000001wMqzQAE"
+    }
 }

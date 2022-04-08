@@ -32,32 +32,27 @@ This is how you connect to the WebSocket server:
 WSClient client = new WSClient();
 // Register onMessage event handler
 client.onMessage(WebSocketMessageHandler.class);
-// We also can set error handler if something goes wrong on the other side
-client.onError(WebSocketMessageHandler.class);
-// And we can register a handler that will be called when the connection is closed
-client.onClose(WebSocketMessageHandler.class);
-// Finally, we connect to the WebSocket server and receive the connection object
+// Connect to the WebSocket server and receive the connection object
 WSConnection connection = client.connect('wss://some-ws-endpoint.com');
 // With the connection object we can send a new message or close the connection
 connection.send('Hello World!');
-connection.close();
 ```
 
 For more examples, please refer to [here](docs/examples).
 
-**Be aware, that this package uses a lot of Platform Events and Queueable Apex jobs to make things work. It can affect your organization's [governor limits](https://developer.salesforce.com/docs/atlas.en-us.234.0.platform_events.meta/platform_events/platform_event_limits.htm)**  
+**Be aware, that this package uses a lot of Platform Events and Queueable Apex jobs to make things work. It can affect your organization's [governor limits](https://developer.salesforce.com/docs/atlas.en-us.234.0.platform_events.meta/platform_events/platform_event_limits.htm).**  
 _Let's say we receive a new message every 10 seconds. For a minute of an established connection, it submits approximately 2-4 Queueable Apex jobs and fires 6-18 Platform Events (depending on the amount of registered handlers)._
 
 ## Installation
 
 ### From Unmanaged Package
 
-You can just install the package by the link on a [sandbox](http://test.salesforce.com/packaging/installPackage.apexp?p0=04t5Y000001wLvEQAU) or [dev org](http://login.salesforce.com/packaging/installPackage.apexp?p0=04t5Y000001wLvEQAU).
+You can just install the package by the link on a [sandbox](https://test.salesforce.com/packaging/installPackage.apexp?p0=04t5Y000001wMqzQAE) or [dev org](https://login.salesforce.com/packaging/installPackage.apexp?p0=04t5Y000001wMqzQAE).
 
 If you prefer using salesforce CLI you can run:
 
 ```
-sfdx force:package:install -p ws-apex-client -w 10 -b 10 -u <username>
+sfdx force:package:install -p 04t5Y000001wMqzQAE -w 10 -b 10 -u <username>
 ```
 
 ### From Source
