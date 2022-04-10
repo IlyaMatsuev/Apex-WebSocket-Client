@@ -28,3 +28,26 @@ WSConnection connection = client.connect('wss://some-ws-endpoint.com');
 
 connection.send('Hello Wolrd!');
 ```
+
+## Closing An Existing Connection
+
+You can close the existing connection via the `WSConnection` class instance. You can create one if you know the client id:
+
+```java
+WSClient client = new WSClient();
+
+// Some code here...
+
+WSConnection connection = client.connect('wss://some-ws-endpoint.com');
+
+// You'd want to save the created client id somewhere if you wish to access this connection somewhere out of handlers classes later
+System.debug(connection.getCLientId());
+```
+
+Then you can use this client id to close the connection:
+
+```java
+String clientId = '...';
+WSConnection connection = new WSConnection(clientId);
+connection.close();
+```

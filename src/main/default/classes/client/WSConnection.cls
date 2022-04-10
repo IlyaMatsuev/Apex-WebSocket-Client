@@ -2,7 +2,7 @@ global class WSConnection {
     private final String clientId;
     private final List<String> messages;
 
-    public WSConnection(String clientId) {
+    global WSConnection(String clientId) {
         this(clientId, new List<String>());
     }
 
@@ -16,6 +16,7 @@ global class WSConnection {
     }
 
     global List<String> getUpdates() {
+        // TODO: Call WSDispatcherService.listen(); if there are no messages
         return messages;
     }
 

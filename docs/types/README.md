@@ -41,6 +41,10 @@ This class is used to register message handlers and create a connection to the W
 
 This class represents the WebSocket connection. Can be used to get new messages from the server, send messages back, or to close the connection.
 
+#### Constructors
+
+`WSConnection(String clientId)` - Creates a new connection instance referencing the existing connection with the provided client id.
+
 #### Methods
 
 `String getClientId()` - Returns temporary WebSocket client id used to communicate to the WebSocket server.
