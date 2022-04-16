@@ -1,28 +1,39 @@
-public class WSDispatcherSettings {
-    public static final Integer HTTP_MAX_TIMEOUT = 120000;
+global class WSDispatcherSettings {
+    global static final Integer HTTP_MAX_TIMEOUT = 120000;
+    global static final Integer HTTP_MIN_TIMEOUT = 5000;
+    global static final Integer HTTP_DEFAULT_TIMEOUT = 30000;
     public static final Integer CPU_TIME_SCOPE = 5000;
 
-    @TestVisible
     private static WSDispatcherSetting__c settings = WSDispatcherSetting__c.getOrgDefaults();
 
-    public static String getEndpoint() {
-        String settingValue = settings.Endpoint__c;
-        if (String.isBlank(settingValue)) {
-            throw new CalloutException('No endpoint has been provided in the WS Dispatcher Settings');
-        }
-        return settingValue;
+    global static String getEndpoint() {
+        return setEndpoint(settings.Endpoint__c);
     }
 
-    // TODO: Don't use max timeout, set default value at 30000
-    public static Integer getTimeout() {
-        Integer settingValue = settings.Timeout__c?.intValue();
-        if (settingValue == null || settingValue > HTTP_MAX_TIMEOUT) {
-            System.debug(
-                LoggingLevel.WARN,
-                'No timeout has been specified in the WS Dispatcher Settings. Consider using max timeout'
-            );
-            settingValue = HTTP_MAX_TIMEOUT;
+    global static String setEndpoint(String endpoint) {
+        if (String.isBlank(endpoint)) {
+            throw new CalloutException('No endpoint has been provided');
         }
-        return settingValue;
+        return settings.Endpoint__c = endpoint;
+    }
+
+    global static Integer getTimeout() {
+        return setTimeout(settings.Timeout__c?.intValue());
+    }
+
+    global static Integer setTimeout(Integer timeout) {
+        if (timeout == null) {
+            System.debug(LoggingLevel.WARN, 'No timeout has been provided. Consider using default timeout');
+            return (settings.Timeout__c = HTTP_DEFAULT_TIMEOUT).intValue();
+        } else if (timeout < HTTP_MIN_TIMEOUT || timeout > HTTP_MAX_TIMEOUT) {
+            throw new CalloutException(
+                'Request timeout should be in range from ' +
+                HTTP_MIN_TIMEOUT +
+                ' to ' +
+                HTTP_MAX_TIMEOUT +
+                ' milliseconds'
+            );
+        }
+        return (settings.Timeout__c = timeout).intValue();
     }
 }

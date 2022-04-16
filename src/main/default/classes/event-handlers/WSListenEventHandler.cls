@@ -58,7 +58,7 @@ public class WSListenEventHandler extends WSEventHandler {
         }
 
         private void listenAgain() {
-            if (isUnderCalloutCountLimit() && isUnderCalloutTimeLimit() && isUnderCpuTimeLimit()) {
+            if (isUnderCalloutCountLimit() && isUnderCalloutTimeLimit()) {
                 execute();
             } else {
                 WSDispatcherService.listenAsync(clientId, handlers);
@@ -71,10 +71,6 @@ public class WSListenEventHandler extends WSEventHandler {
 
         private Boolean isUnderCalloutTimeLimit() {
             return calloutTime + WSDispatcherSettings.getTimeout() <= WSDispatcherSettings.HTTP_MAX_TIMEOUT;
-        }
-
-        private Boolean isUnderCpuTimeLimit() {
-            return Limits.getCpuTime() + WSDispatcherSettings.CPU_TIME_SCOPE < Limits.getLimitCpuTime();
         }
     }
 

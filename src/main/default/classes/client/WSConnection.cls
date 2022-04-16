@@ -1,6 +1,7 @@
 global class WSConnection {
     private final String clientId;
-    private final List<String> messages;
+    private List<String> messages;
+    private Boolean closed = false;
 
     global WSConnection(String clientId) {
         this(clientId, new List<String>());
@@ -16,7 +17,6 @@ global class WSConnection {
     }
 
     global List<String> getUpdates() {
-        // TODO: Call WSDispatcherService.listen(); if there are no messages
         return messages;
     }
 
@@ -27,11 +27,26 @@ global class WSConnection {
         }
     }
 
+    global Boolean listen() {
+        WSResponsePayload response = WSDispatcherService.listen(clientId);
+        if (!response.success) {
+            throw new ConnectionException('Failed to listen sync: ' + response.firstMessage);
+        }
+        if (response.event != WSResponsePayload.ResponseEvent.Timeout) {
+            messages = response.messages;
+        }
+        return response.event != WSResponsePayload.ResponseEvent.Timeout;
+    }
+
     global void close() {
+        if (closed) {
+            return;
+        }
         WSResponsePayload response = WSDispatcherService.close(clientId);
         if (!response.success) {
             throw new ConnectionException('Failed to close the connection: ' + response.firstMessage);
         }
+        closed = true;
     }
 
     global class ConnectionException extends Exception {

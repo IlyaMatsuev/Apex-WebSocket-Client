@@ -5,6 +5,7 @@ public class WSDispatcherHttpMock implements HttpCalloutMock {
     private static Boolean listenExecuted = false;
 
     public WSDispatcherHttpMock() {
+        this(null, null);
     }
 
     public WSDispatcherHttpMock(WSResponsePayload.ResponseEvent responseEvent, String responseMessage) {
@@ -13,9 +14,10 @@ public class WSDispatcherHttpMock implements HttpCalloutMock {
     }
 
     public HttpResponse respond(HttpRequest request) {
-        WSRequestPayload requestPayload = (WSRequestPayload) JSON.deserialize(
-            request.getBody(),
-            WSRequestPayload.class
+        Map<String, Object> untypedRequestPayload = (Map<String, Object>) JSON.deserializeUntyped(request.getBody());
+        WSRequestPayload requestPayload = new WSRequestPayload(
+            WSRequestPayload.RequestCommand.valueOf((String) untypedRequestPayload.get('command')),
+            untypedRequestPayload
         );
         HttpResponse response = new HttpResponse();
         response.setHeader('Content-Type', 'application/json');

@@ -1,12 +1,12 @@
-import { ICommand, IRequestPayload, ResponseEvent, ResponsePayload } from '../types';
+import { ICommand, IListenRequestPayload, ResponseEvent, ResponsePayload } from '../types';
 import { Store } from '../store/store';
 import { logger } from '..';
-import { listenTimeout } from './../config.json';
+import { defaultListenTimeout } from './../config.json';
 
-const timeout = Number(process.env.LISTEN_TIMEOUT) || listenTimeout;
+const defaultTimeout = Number(process.env.DEFAULT_LISTEN_TIMEOUT) || defaultListenTimeout;
 
 export default class ListenCommand implements ICommand {
-    public execute(request: IRequestPayload): Promise<ResponsePayload> {
+    public execute(request: IListenRequestPayload): Promise<ResponsePayload> {
         return new Promise<ResponsePayload>(resolve => {
             const store = Store.getStore();
             const client = store.getClient(request.clientId);
@@ -14,7 +14,7 @@ export default class ListenCommand implements ICommand {
             const timeoutTimer = setTimeout(() => {
                 this.removeListeners(client.id);
                 reply(['Timeout. Reconnect again'], ResponseEvent.Timeout);
-            }, timeout);
+            }, this.getTimeout(request.timeout));
 
             const reply = (data: string[], event: ResponseEvent): void => {
                 logger.info(`Reply with event: ${event}`);
@@ -39,6 +39,14 @@ export default class ListenCommand implements ICommand {
             store.once(`${client.id}-error`, error => reply([error.getText()], ResponseEvent.Error));
             store.once(`${client.id}-close`, () => reply(['The connection is closed'], ResponseEvent.Close));
         });
+    }
+
+    private getTimeout(proposedTimeout: number): number {
+        if (proposedTimeout) {
+            // Set one second less to avoid timeout exception on the Apex side
+            return proposedTimeout - 1000;
+        }
+        return defaultTimeout;
     }
 
     private removeListeners(clientId: string): void {

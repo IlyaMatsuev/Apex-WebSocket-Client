@@ -1,7 +1,3 @@
-export interface ICommand {
-    execute(request: RequestPayload): Promise<ResponsePayload>;
-}
-
 export enum RequestCommand {
     Connect = 'connect',
     Listen = 'listen',
@@ -29,15 +25,29 @@ export interface IMessageRequestPayload {
     message: string;
 }
 
-export interface IRequestPayload {
-    command: RequestCommand.Listen | RequestCommand.Close;
+export interface IListenRequestPayload {
+    command: RequestCommand.Listen;
+    clientId: string;
+    timeout: number;
+}
+
+export interface ICloseRequestPayload {
+    command: RequestCommand.Close;
     clientId: string;
 }
 
-export type RequestPayload = IConnectRequestPayload | IMessageRequestPayload | IRequestPayload;
+export type RequestPayload =
+    | IConnectRequestPayload
+    | IMessageRequestPayload
+    | IListenRequestPayload
+    | ICloseRequestPayload;
 
 export type ResponsePayload = {
     clientId: string;
     event: ResponseEvent;
     messages: string[];
 };
+
+export interface ICommand {
+    execute(request: RequestPayload): Promise<ResponsePayload>;
+}

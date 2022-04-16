@@ -10,6 +10,9 @@ declare module 'fastify' {
     }
 }
 
+const MIN_LISTEN_TIMEOUT = 5000;
+const MAX_LISTEN_TIMEOUT = 120000;
+
 const validateAndGetPayload = function (this: FastifyRequest): RequestPayload {
     if (this.headers['content-type'] !== 'application/json') {
         throw new ValidationError(`Content-Type header must be passed as 'application/json'`);
@@ -37,6 +40,10 @@ const validateAndGetPayload = function (this: FastifyRequest): RequestPayload {
         }
     } else if (!Store.getStore().hasClient(payload.clientId)) {
         throw new ValidationError(`Whether no client id has been provided or it's incorrect`);
+    } else if (payload.command === RequestCommand.Listen) {
+        if (!payload.timeout || payload.timeout < MIN_LISTEN_TIMEOUT || payload.timeout > MAX_LISTEN_TIMEOUT) {
+            throw new ValidationError('Provide the valid timeout value');
+        }
     }
 
     if (payload.command === RequestCommand.Message && !payload.message) {

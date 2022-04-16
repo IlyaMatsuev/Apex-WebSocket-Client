@@ -23,6 +23,7 @@ private class WSConnectionTest {
         Test.setMock(HttpCalloutMock.class, new WSDispatcherHttpMock());
         Test.startTest();
         new WSConnection(CLIENT_ID).send('Hello World!');
+        System.assertEquals(1, Limits.getCallouts());
         Test.stopTest();
     }
 
@@ -43,18 +44,70 @@ private class WSConnectionTest {
 
         System.assert(error != null, 'Exception should have been thrown');
         System.assert(error instanceof WSConnection.ConnectionException, 'Exception type is not correct');
-        System.assertEquals(
-            'Failed to send a message: Invalid client id',
-            error.getMessage(),
-            'Exception message is not correct'
-        );
     }
 
     @IsTest
-    private static void closeConnectionTest() {
-        Test.setMock(HttpCalloutMock.class, new WSDispatcherHttpMock());
+    private static void listenToUpdatesTest() {
+        String responseMessage = 'Hello World!';
+        Test.setMock(
+            HttpCalloutMock.class,
+            new WSDispatcherHttpMock(WSResponsePayload.ResponseEvent.Message, responseMessage)
+        );
+        WSConnection connection = new WSConnection(CLIENT_ID);
         Test.startTest();
-        new WSConnection(CLIENT_ID).close();
+        Boolean updatesReceived = connection.listen();
+        List<String> messages = connection.getUpdates();
+        Test.stopTest();
+
+        System.assert(updatesReceived, 'The Timeout response received');
+        System.assertEquals(1, messages.size(), 'There should be only one message');
+        System.assertEquals(responseMessage, messages.get(0), 'Wrong response message');
+    }
+
+    @IsTest
+    private static void listenToUpdatesWithTimeoutTest() {
+        Test.setMock(
+            HttpCalloutMock.class,
+            new WSDispatcherHttpMock(WSResponsePayload.ResponseEvent.Timeout, 'Timeout. Reconnect again')
+        );
+        WSConnection connection = new WSConnection(CLIENT_ID);
+        Test.startTest();
+        Boolean updatesReceived = connection.listen();
+        Test.stopTest();
+
+        System.assert(!updatesReceived, 'The Timeout should be received');
+        System.assert(connection.getUpdates().isEmpty(), 'There should be no messages');
+    }
+
+    @IsTest
+    private static void listenToUpdatesWithInvalidClientIdTest() {
+        String responseMessage = 'Hello World!';
+        Test.setMock(
+            HttpCalloutMock.class,
+            new WSDispatcherHttpMock(WSResponsePayload.ResponseEvent.Error, 'Invalid client id')
+        );
+        Exception error;
+        Test.startTest();
+        try {
+            new WSConnection(CLIENT_ID).listen();
+        } catch (Exception ex) {
+            error = ex;
+        }
+        Test.stopTest();
+
+        System.assert(error != null, 'Exception should have been thrown');
+        System.assert(error instanceof WSConnection.ConnectionException, 'Exception type is not correct');
+    }
+
+    @IsTest
+    private static void closeConnectionRepeatedlyTest() {
+        Test.setMock(HttpCalloutMock.class, new WSDispatcherHttpMock());
+        WSConnection connection = new WSConnection(CLIENT_ID);
+        Test.startTest();
+        connection.close();
+        connection.close();
+        connection.close();
+        System.assertEquals(1, Limits.getCallouts());
         Test.stopTest();
     }
 
@@ -75,10 +128,5 @@ private class WSConnectionTest {
 
         System.assert(error != null, 'Exception should have been thrown');
         System.assert(error instanceof WSConnection.ConnectionException, 'Exception type is not correct');
-        System.assertEquals(
-            'Failed to close the connection: Invalid client id',
-            error.getMessage(),
-            'Exception message is not correct'
-        );
     }
 }

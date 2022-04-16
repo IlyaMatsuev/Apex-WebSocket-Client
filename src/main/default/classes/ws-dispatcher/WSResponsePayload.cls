@@ -15,8 +15,18 @@ public class WSResponsePayload {
         }
     }
 
+    private WSResponsePayload(ResponseEvent event, String clientId, String message) {
+        this.event = event;
+        this.clientId = clientId;
+        this.messages = new List<String>{ message };
+    }
+
     public static WSResponsePayload fromJson(String response) {
         return (WSResponsePayload) JSON.deserialize(response, WSResponsePayload.class);
+    }
+
+    public static WSResponsePayload getTimeoutResponse(String clientId) {
+        return new WSResponsePayload(ResponseEvent.Timeout, clientId, 'Timeout. Reconnect again');
     }
 
     public enum ResponseEvent {

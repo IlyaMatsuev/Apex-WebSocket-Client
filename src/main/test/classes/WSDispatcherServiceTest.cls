@@ -203,7 +203,7 @@ public class WSDispatcherServiceTest {
     }
 
     @IsTest
-    private static void listenCommandInvalidClientIdTest() {
+    private static void listenAsyncCommandInvalidClientIdTest() {
         Test.setMock(
             HttpCalloutMock.class,
             new WSDispatcherHttpMock(
@@ -227,31 +227,6 @@ public class WSDispatcherServiceTest {
             'Failed to listen: Whether no client id has been provided or it\'s incorrect',
             error.getMessage(),
             'Response message is not correct'
-        );
-    }
-
-    @IsTest
-    private static void dispatcherSettingsAreNotSetTest() {
-        WSDispatcherSettings.settings = new WSDispatcherSetting__c();
-        String endpoint;
-        Integer timeout;
-        Exception error;
-        Test.startTest();
-        try {
-            timeout = WSDispatcherSettings.getTimeout();
-            endpoint = WSDispatcherSettings.getEndpoint();
-        } catch (Exception ex) {
-            error = ex;
-        }
-        Test.stopTest();
-
-        System.assertEquals(WSDispatcherSettings.HTTP_MAX_TIMEOUT, timeout, 'Timeout should have become max value');
-        System.assert(error != null, 'Exception should have been thrown');
-        System.assert(error instanceof CalloutException, 'Exception type is not correct');
-        System.assertEquals(
-            'No endpoint has been provided in the WS Dispatcher Settings',
-            error.getMessage(),
-            'Exception message is not correct'
         );
     }
 

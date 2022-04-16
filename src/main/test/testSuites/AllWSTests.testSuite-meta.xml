@@ -3,5 +3,6 @@
     <testClassName>WSClientTest</testClassName>
     <testClassName>WSConnectionTest</testClassName>
     <testClassName>WSDispatcherServiceTest</testClassName>
+    <testClassName>WSDispatcherSettingsTest</testClassName>
     <testClassName>WSUpdateEventTriggerTest</testClassName>
 </ApexTestSuite>

@@ -1,27 +1,25 @@
 public class WSRequestPayload {
     public final RequestCommand command;
-    public final String clientId;
-    public final String message;
-    public final String endpoint;
-    public final String protocol;
+    private final Map<String, Object> fields;
 
-    public WSRequestPayload(RequestCommand command, String clientIdOrEndpoint) {
-        this(command, clientIdOrEndpoint, null);
-    }
-
-    public WSRequestPayload(RequestCommand command, String clientIdOrEndpoint, String messageOrProtocol) {
-        this.command = command;
-        if (command == RequestCommand.Connect) {
-            this.endpoint = clientIdOrEndpoint;
-            this.protocol = messageOrProtocol;
-        } else {
-            this.clientId = clientIdOrEndpoint;
-            this.message = messageOrProtocol;
+    public String clientId {
+        get {
+            return (String) fields.get('clientId');
         }
     }
 
+    public WSRequestPayload(RequestCommand command, String clientId) {
+        this(command, new Map<String, Object>{ 'clientId' => clientId });
+    }
+
+    public WSRequestPayload(RequestCommand command, Map<String, Object> fields) {
+        this.fields = fields == null ? new Map<String, Object>() : fields;
+        this.command = command;
+    }
+
     public String toJson() {
-        return JSON.serialize(this, true);
+        fields.put('command', command.name());
+        return JSON.serialize(fields, true);
     }
 
     public enum RequestCommand {
