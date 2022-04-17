@@ -80,6 +80,22 @@ private class WSConnectionTest {
     }
 
     @IsTest
+    private static void listenToUpdatesWithClosingTest() {
+        Test.setMock(
+            HttpCalloutMock.class,
+            new WSDispatcherHttpMock(WSResponsePayload.ResponseEvent.Close, 'Connection closed')
+        );
+        WSConnection connection = new WSConnection(CLIENT_ID);
+        Test.startTest();
+        Boolean updatesReceived = connection.listen();
+        Test.stopTest();
+
+        System.assert(updatesReceived, 'The Timeout response received');
+        System.assert(connection.isClosed(), 'Connection should be closed');
+        System.assertEquals(1, connection.getUpdates().size(), 'There should be one closing message');
+    }
+
+    @IsTest
     private static void listenToUpdatesWithInvalidClientIdTest() {
         String responseMessage = 'Hello World!';
         Test.setMock(
@@ -107,7 +123,8 @@ private class WSConnectionTest {
         connection.close();
         connection.close();
         connection.close();
-        System.assertEquals(1, Limits.getCallouts());
+        System.assert(connection.isClosed(), 'Connection should be closed');
+        System.assertEquals(1, Limits.getCallouts(), 'Callout has been sent more than once');
         Test.stopTest();
     }
 

@@ -50,4 +50,35 @@ Then you can use this client id to close the connection:
 String clientId = '...';
 WSConnection connection = new WSConnection(clientId);
 connection.close();
+System.debug('Is closed? ' + connection.isClosed());
+```
+
+## Synchronously Listen To The Messages
+
+You can listen to the messages from the WebSocket server right from the synchronously running Apex code.
+
+Let's say you already have a client id:
+
+```java
+String clientId = '...';
+WSConnection connection = new WSConnection(clientId);
+Boolean receivedUpdates = connection.listen();
+if (receivedUpdates) {
+    // Here are our new received messages
+    System.debug(connection.getUpdates());
+} else {
+    // If the returned value is false it means that you've reached the timeout response
+}
+```
+
+It also can happen that the connection is closed. In this case, you would still receive `true` as the result and you have to check if the connection closed yourself:
+
+```java
+...
+Boolean receivedUpdates = connection.listen();
+if (receivedUpdates) {
+    System.debug('Is closed? ' + connection.isClosed());
+} else {
+    // And again, if the returned value is false it means the connection is still alive
+}
 ```

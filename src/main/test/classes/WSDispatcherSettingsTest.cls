@@ -20,7 +20,7 @@ private class WSDispatcherSettingsTest {
         }
 
         System.assert(error != null, 'No exception has been thrown');
-        System.assert(error instanceof CalloutException, 'Invalid exception type');
+        System.assert(error instanceof IllegalArgumentException, 'Invalid exception type');
     }
 
     @IsTest
@@ -51,7 +51,7 @@ private class WSDispatcherSettingsTest {
         }
 
         System.assert(error != null, 'No exception has been thrown');
-        System.assert(error instanceof CalloutException, 'Invalid exception type');
+        System.assert(error instanceof IllegalArgumentException, 'Invalid exception type');
     }
 
     private static void initSetting(String endpoint, Integer timeout) {

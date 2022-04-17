@@ -2,10 +2,15 @@
 public class WSDispatcherHttpMock implements HttpCalloutMock {
     private final WSResponsePayload.ResponseEvent responseEvent;
     private final String responseMessage;
+    private final Exception calloutError;
     private static Boolean listenExecuted = false;
 
     public WSDispatcherHttpMock() {
         this(null, null);
+    }
+
+    public WSDispatcherHttpMock(Exception calloutError) {
+        this.calloutError = calloutError;
     }
 
     public WSDispatcherHttpMock(WSResponsePayload.ResponseEvent responseEvent, String responseMessage) {
@@ -14,6 +19,10 @@ public class WSDispatcherHttpMock implements HttpCalloutMock {
     }
 
     public HttpResponse respond(HttpRequest request) {
+        if (calloutError != null) {
+            throw calloutError;
+        }
+
         Map<String, Object> untypedRequestPayload = (Map<String, Object>) JSON.deserializeUntyped(request.getBody());
         WSRequestPayload requestPayload = new WSRequestPayload(
             WSRequestPayload.RequestCommand.valueOf((String) untypedRequestPayload.get('command')),

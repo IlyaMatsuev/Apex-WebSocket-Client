@@ -126,6 +126,34 @@ public class WSDispatcherServiceTest {
     }
 
     @IsTest
+    private static void listenCommandWithCalloutTimeoutExceptionTest() {
+        Test.setMock(HttpCalloutMock.class, new WSDispatcherHttpMock(new CalloutException('Read timed out')));
+        Test.startTest();
+        WSResponsePayload response = WSDispatcherService.listen(CLIENT_ID);
+        Test.stopTest();
+
+        System.assertEquals(CLIENT_ID, response.clientId, 'Client id is not correct');
+        System.assertEquals('Timeout', response.event.name(), '"Timeout" event should be returned');
+        System.assertEquals('Timeout. Reconnect again', response.firstMessage, 'Response message is not correct');
+    }
+
+    @IsTest
+    private static void listenCommandWithUnexpectedExceptionTest() {
+        Test.setMock(HttpCalloutMock.class, new WSDispatcherHttpMock(new NullPointerException()));
+        Test.startTest();
+        Exception error;
+        try {
+            WSDispatcherService.listen(CLIENT_ID);
+        } catch (Exception ex) {
+            error = ex;
+        }
+        Test.stopTest();
+
+        System.assert(error != null, 'Exception should have been thrown');
+        System.assert(error instanceof NullPointerException, 'Exception type is not correct');
+    }
+
+    @IsTest
     private static void listenAsyncCommandTimeoutAndCloseResponseTest() {
         MockEventPublisher eventPublisher = new MockEventPublisher();
         Test.setMock(

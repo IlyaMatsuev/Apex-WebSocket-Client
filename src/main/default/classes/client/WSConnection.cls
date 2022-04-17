@@ -20,6 +20,10 @@ global class WSConnection {
         return messages;
     }
 
+    global Boolean isClosed() {
+        return closed;
+    }
+
     global void send(String message) {
         WSResponsePayload response = WSDispatcherService.message(clientId, message);
         if (!response.success) {
@@ -32,6 +36,9 @@ global class WSConnection {
         if (!response.success) {
             throw new ConnectionException('Failed to listen sync: ' + response.firstMessage);
         }
+        if (response.event == WSResponsePayload.ResponseEvent.Close) {
+            closed = true;
+        }
         if (response.event != WSResponsePayload.ResponseEvent.Timeout) {
             messages = response.messages;
         }
@@ -40,6 +47,7 @@ global class WSConnection {
 
     global void close() {
         if (closed) {
+            System.debug(LoggingLevel.WARN, 'The connection is already closed');
             return;
         }
         WSResponsePayload response = WSDispatcherService.close(clientId);

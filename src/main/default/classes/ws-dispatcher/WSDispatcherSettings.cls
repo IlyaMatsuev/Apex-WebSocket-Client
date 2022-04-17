@@ -12,7 +12,7 @@ global class WSDispatcherSettings {
 
     global static String setEndpoint(String endpoint) {
         if (String.isBlank(endpoint)) {
-            throw new CalloutException('No endpoint has been provided');
+            throw new IllegalArgumentException('No endpoint has been provided');
         }
         return settings.Endpoint__c = endpoint;
     }
@@ -26,7 +26,7 @@ global class WSDispatcherSettings {
             System.debug(LoggingLevel.WARN, 'No timeout has been provided. Consider using default timeout');
             return (settings.Timeout__c = HTTP_DEFAULT_TIMEOUT).intValue();
         } else if (timeout < HTTP_MIN_TIMEOUT || timeout > HTTP_MAX_TIMEOUT) {
-            throw new CalloutException(
+            throw new IllegalArgumentException(
                 'Request timeout should be in range from ' +
                 HTTP_MIN_TIMEOUT +
                 ' to ' +
