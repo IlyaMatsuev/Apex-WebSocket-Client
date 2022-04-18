@@ -45,15 +45,18 @@ public class WSClientTest {
 
     @IsTest
     private static void connectWithMessageAndErrorAndCloseHandlersTest() {
-        String message = 'Hello World!';
-        MockEventPublisher eventPublisher = new MockEventPublisher();
-        Test.setMock(HttpCalloutMock.class, new WSDispatcherHttpMock(WSResponsePayload.ResponseEvent.Message, message));
+        Test.setMock(
+            HttpCalloutMock.class,
+            new WSDispatcherHttpMock(WSResponsePayload.ResponseEvent.Message, 'Hello World!')
+        );
         Test.startTest();
-        WSListenEventHandler.eventPublisher = eventPublisher;
         WSConnection connection = new WSClient()
             .onMessage(WSClientTest.MockUpdateHandler.class)
+            .onMessage(WSClientTest.MockUpdateHandler.class, new Map<String, Object>{ 'test' => 1 })
             .onError(WSClientTest.MockUpdateHandler.class)
+            .onError(WSClientTest.MockUpdateHandler.class, new Map<String, Object>{ 'test' => 2 })
             .onClose(WSClientTest.MockUpdateHandler.class)
+            .onClose(WSClientTest.MockUpdateHandler.class, new Map<String, Object>{ 'test' => 3 })
             .connect('wss://fake.ws.endpoint/');
         Test.getEventBus().deliver();
         Test.stopTest();
@@ -64,14 +67,6 @@ public class WSClientTest {
 
     public class MockUpdateHandler implements IWSMessageHandler {
         public void handle(WSConnection connection, Map<String, Object> args) {
-        }
-    }
-
-    private class MockEventPublisher extends WSListenEventHandler.EventPublisher {
-        public final List<WSUpdateEvent__e> updates = new List<WSUpdateEvent__e>();
-
-        public override void publish(List<SObject> events) {
-            updates.addAll((List<WSUpdateEvent__e>) events);
         }
     }
 }

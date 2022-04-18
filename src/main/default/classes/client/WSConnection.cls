@@ -24,6 +24,7 @@ global class WSConnection {
         return closed;
     }
 
+    // TODO: Don't allow to send again if the connection is closed
     global void send(String message) {
         WSResponsePayload response = WSDispatcherService.message(clientId, message);
         if (!response.success) {
@@ -31,6 +32,7 @@ global class WSConnection {
         }
     }
 
+    // TODO: Don't allow to listen again if the connection is closed
     global Boolean listen() {
         WSResponsePayload response = WSDispatcherService.listen(clientId);
         if (!response.success) {

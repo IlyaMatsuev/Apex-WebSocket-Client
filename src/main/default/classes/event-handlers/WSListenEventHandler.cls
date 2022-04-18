@@ -8,10 +8,18 @@ public class WSListenEventHandler extends WSEventHandler {
 
     public override WSAsyncJob createJob(SObject event) {
         WSListenEvent__e listenEvent = (WSListenEvent__e) event;
-        return new ListenJob(
-            listenEvent.ClientId__c,
-            (List<WSHandlerWrapper>) JSON.deserialize(listenEvent.Handlers__c, List<WSHandlerWrapper>.class)
-        );
+        List<WSHandlerWrapper> handlers = new List<WSHandlerWrapper>();
+        for (Object handler : (List<Object>) JSON.deserializeUntyped(listenEvent.Handlers__c)) {
+            Map<String, Object> handlerFields = (Map<String, Object>) handler;
+            handlers.add(
+                new WSHandlerWrapper(
+                    WSHandlerWrapper.EventType.valueOf((String) handlerFields.get('eventType')),
+                    Type.forName((String) handlerFields.get('className')),
+                    (Map<String, Object>) handlerFields.get('args')
+                )
+            );
+        }
+        return new ListenJob(listenEvent.ClientId__c, handlers);
     }
 
     private class ListenJob extends WSAsyncJob {
@@ -25,6 +33,7 @@ public class WSListenEventHandler extends WSEventHandler {
             this.handlers = handlers;
         }
 
+        // TODO: If the ws server is down and we submit listen job with error handler, then it won't stop
         public override void execute() {
             DateTime calloutStart = DateTime.now();
             WSResponsePayload response = WSDispatcherService.listen(clientId);
@@ -43,7 +52,7 @@ public class WSListenEventHandler extends WSEventHandler {
                 eventPublisher.publish(updates);
             }
 
-            if (response.event != WSResponsePayload.ResponseEvent.Close) {
+            if (response.success && response.event != WSResponsePayload.ResponseEvent.Close) {
                 listenAgain();
             }
         }
@@ -58,6 +67,7 @@ public class WSListenEventHandler extends WSEventHandler {
         }
 
         private void listenAgain() {
+            // TODO: Probably should execute again only if we got Timeout response. Otherwise a lot of jobs are queued
             if (isUnderCalloutCountLimit() && isUnderCalloutTimeLimit()) {
                 execute();
             } else {
