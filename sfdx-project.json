@@ -13,6 +13,7 @@
     "sfdcLoginUrl": "https://login.salesforce.com",
     "sourceApiVersion": "52.0",
     "packageAliases": {
-        "ws-apex-client": "0Ho5Y000000wkR3SAI"
+        "ws-apex-client": "0Ho5Y000000wkRDSAY",
+        "ws-apex-client@1.0.0-0": "04t5Y000001wMt5QAE"
     }
 }
