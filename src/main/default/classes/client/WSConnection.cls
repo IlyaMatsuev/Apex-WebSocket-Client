@@ -59,6 +59,5 @@ global class WSConnection {
         closed = true;
     }
 
-    global class ConnectionException extends Exception {
-    }
+    global class ConnectionException extends Exception {}
 }

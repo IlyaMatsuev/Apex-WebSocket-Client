@@ -36,7 +36,7 @@ public class WSDispatcherHttpMock implements HttpCalloutMock {
 
     private Map<String, Object> getResponseObject(WSRequestPayload request) {
         if (responseEvent == WSResponsePayload.ResponseEvent.Error) {
-            return new Map<String, Object>{ 'event' => 'error', 'messages' => new List<String>{ responseMessage } };
+            return new Map<String, Object> { 'event' => 'error', 'messages' => new List<String> { responseMessage } };
         }
 
         switch on request.command {
@@ -66,10 +66,10 @@ public class WSDispatcherHttpMock implements HttpCalloutMock {
     }
 
     private Map<String, Object> getResponseObject(String clientId, String event, String message) {
-        return new Map<String, Object>{
+        return new Map<String, Object> {
             'clientId' => clientId,
             'event' => event,
-            'messages' => new List<String>{ message }
+            'messages' => new List<String> { message }
         };
     }
 
@@ -86,6 +86,5 @@ public class WSDispatcherHttpMock implements HttpCalloutMock {
             hex.substring(20);
     }
 
-    private class WSDispatcherHttpMockException extends Exception {
-    }
+    private class WSDispatcherHttpMockException extends Exception {}
 }

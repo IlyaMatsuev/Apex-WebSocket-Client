@@ -3,7 +3,7 @@ public class WSDispatcherService {
         return call(
             new WSRequestPayload(
                 WSRequestPayload.RequestCommand.Connect,
-                new Map<String, Object>{ 'endpoint' => endpoint, 'protocol' => protocol }
+                new Map<String, Object> { 'endpoint' => endpoint, 'protocol' => protocol }
             )
         );
     }
@@ -12,7 +12,7 @@ public class WSDispatcherService {
         return call(
             new WSRequestPayload(
                 WSRequestPayload.RequestCommand.Listen,
-                new Map<String, Object>{ 'clientId' => clientId, 'timeout' => WSDispatcherSettings.getTimeout() }
+                new Map<String, Object> { 'clientId' => clientId, 'timeout' => WSDispatcherSettings.getTimeout() }
             )
         );
     }
@@ -25,7 +25,7 @@ public class WSDispatcherService {
         return call(
             new WSRequestPayload(
                 WSRequestPayload.RequestCommand.Message,
-                new Map<String, Object>{ 'clientId' => clientId, 'message' => message }
+                new Map<String, Object> { 'clientId' => clientId, 'message' => message }
             )
         );
     }

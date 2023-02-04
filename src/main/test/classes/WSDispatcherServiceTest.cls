@@ -1,4 +1,4 @@
-@IsTest(IsParallel=true)
+@IsTest(IsParallel = true)
 public class WSDispatcherServiceTest {
     private static final String CLIENT_ID = 'eb3e9a51-f7a3-493b-b208-fae170374e8e';
 
@@ -164,7 +164,7 @@ public class WSDispatcherServiceTest {
         WSListenEventHandler.eventPublisher = eventPublisher;
         WSDispatcherService.listenAsync(
             CLIENT_ID,
-            new List<WSHandlerWrapper>{
+            new List<WSHandlerWrapper> {
                 new WSHandlerWrapper(
                     WSHandlerWrapper.EventType.Close,
                     WSDispatcherServiceTest.MockUpdateHandler.class,
@@ -203,7 +203,7 @@ public class WSDispatcherServiceTest {
         WSListenEventHandler.eventPublisher = eventPublisher;
         WSDispatcherService.listenAsync(
             CLIENT_ID,
-            new List<WSHandlerWrapper>{
+            new List<WSHandlerWrapper> {
                 new WSHandlerWrapper(
                     WSHandlerWrapper.EventType.Message,
                     WSDispatcherServiceTest.MockUpdateHandler.class,
@@ -283,8 +283,7 @@ public class WSDispatcherServiceTest {
     }
 
     public class MockUpdateHandler implements IWSMessageHandler {
-        public void handle(WSConnection connection, Map<String, Object> args) {
-        }
+        public void handle(WSConnection connection, Map<String, Object> args) {}
     }
 
     private class MockEventPublisher extends WSListenEventHandler.EventPublisher {

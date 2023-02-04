@@ -1,4 +1,4 @@
-@IsTest(IsParallel=true)
+@IsTest(IsParallel = true)
 public class WSUpdateEventTriggerTest {
     private static final String CLIENT_ID = '33393376-1c9f-4997-a141-f8feaec0977a';
 
@@ -6,7 +6,7 @@ public class WSUpdateEventTriggerTest {
     private static void oneIncomingMessageWithArgumentsTest() {
         String clientId = '33393376-1c9f-4997-a141-f8feaec0977a';
         String message = 'Hello World!';
-        Map<String, Object> args = new Map<String, Object>{ 'arg1' => 1, 'arg2' => 2 };
+        Map<String, Object> args = new Map<String, Object> { 'arg1' => 1, 'arg2' => 2 };
 
         Test.startTest();
         EventBus.publish(prepareUpdateEvent(CLIENT_ID, message, args));
@@ -53,7 +53,7 @@ public class WSUpdateEventTriggerTest {
     private static WSUpdateEvent__e prepareUpdateEvent(String id, String message, Map<String, Object> args) {
         return new WSUpdateEvent__e(
             ClientId__c = id,
-            Messages__c = JSON.serialize(new List<String>{ message }),
+            Messages__c = JSON.serialize(new List<String> { message }),
             HandlerClassName__c = 'WSUpdateEventTriggerTest.MockUpdateHandler',
             Arguments__c = JSON.serialize(args)
         );

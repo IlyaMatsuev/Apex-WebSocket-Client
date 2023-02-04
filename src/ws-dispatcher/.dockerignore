@@ -1,24 +1,42 @@
-**/.git
-**/.idea
-**/.vscode
-**/.sfdx
+# IDE
+**/.idea/
+**/.vscode/
 
-**/sfdx-config
-**/dist
-**/node_modules
-
-**/debug.log
-**/.gitignore
+# SFDX
+**/.sfdx/
+**/.sf/
+**/sfdx-config/
 **/.forceignore
+**/sfdx-project.json
+
+# Dependencies
+**/node_modules/
+**/package-lock.json
+
+# Build
+**/build/
+**/dist/
+
+# System Files
+.DS_Store
+*.db
+*.ini
+
+# Logs
+*.log
+
+# Prettier & ESLint
 **/.eslintignore
 **/.eslintrc.json
 **/.prettierignore
 **/.prettierrc.json
-**/sfdx-project.json
 
+# Git
+**/.git/
+**/.github/
+**/.gitignore
+
+# Other
 **/Procfile
 **/LICENSE
 **/README.md
-.idea
-
-**/.DS_Store

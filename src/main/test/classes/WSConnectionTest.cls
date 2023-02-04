@@ -1,4 +1,4 @@
-@IsTest(IsParallel=true)
+@IsTest(IsParallel = true)
 private class WSConnectionTest {
     private static final String CLIENT_ID = 'eb3e9a51-f7a3-493b-b208-fae170374e8e';
 

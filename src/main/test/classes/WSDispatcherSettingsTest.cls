@@ -1,4 +1,4 @@
-@IsTest(IsParallel=true)
+@IsTest(IsParallel = true)
 private class WSDispatcherSettingsTest {
     @IsTest
     private static void getEndpointPositiveTest() {
