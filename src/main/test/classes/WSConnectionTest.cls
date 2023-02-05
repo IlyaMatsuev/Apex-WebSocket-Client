@@ -47,6 +47,29 @@ private class WSConnectionTest {
     }
 
     @IsTest
+    private static void sendMessageWithClosedConnectionTest() {
+        Test.setMock(
+            HttpCalloutMock.class,
+            new WSDispatcherHttpMock(WSResponsePayload.ResponseEvent.Close, 'Connection closed')
+        );
+        WSConnection connection = new WSConnection(CLIENT_ID);
+        Test.startTest();
+        Exception error;
+        Boolean updatesReceived = connection.listen();
+        try {
+            connection.send('Hello World!');
+        } catch (Exception ex) {
+            error = ex;
+        }
+        Test.stopTest();
+
+        System.assert(updatesReceived);
+        System.assert(connection.isClosed());
+        System.assert(error != null);
+        System.assert(error instanceof WSConnection.ConnectionException);
+    }
+
+    @IsTest
     private static void listenToUpdatesTest() {
         String responseMessage = 'Hello World!';
         Test.setMock(
@@ -93,6 +116,29 @@ private class WSConnectionTest {
         System.assert(updatesReceived, 'The Timeout response received');
         System.assert(connection.isClosed(), 'Connection should be closed');
         System.assertEquals(1, connection.getUpdates().size(), 'There should be one closing message');
+    }
+
+    @IsTest
+    private static void listenToUpdatesWithClosedConnectionTest() {
+        Test.setMock(
+            HttpCalloutMock.class,
+            new WSDispatcherHttpMock(WSResponsePayload.ResponseEvent.Close, 'Connection closed')
+        );
+        WSConnection connection = new WSConnection(CLIENT_ID);
+        Test.startTest();
+        Exception error;
+        Boolean updatesReceived = connection.listen();
+        try {
+            connection.listen();
+        } catch (Exception ex) {
+            error = ex;
+        }
+        Test.stopTest();
+
+        System.assert(updatesReceived);
+        System.assert(connection.isClosed());
+        System.assert(error != null);
+        System.assert(error instanceof WSConnection.ConnectionException);
     }
 
     @IsTest

@@ -46,10 +46,12 @@ global class WSConnection {
     /**
      * @description Sends message to the WebSocket server
      * @param message The text message to send
-     * @throws ConnectionException If the message wasn't sent successfully
+     * @throws ConnectionException If the connection is already closed or if the message wasn't sent successfully
      */
     global void send(String message) {
-        // TODO: Don't allow to send again if the connection is closed
+        if (closed) {
+            throw new ConnectionException('The connection is already closed');
+        }
         WSResponsePayload response = WSDispatcherService.message(clientId, message);
         if (!response.success) {
             throw new ConnectionException('Failed to send a message: ' + response.firstMessage);
@@ -57,12 +59,15 @@ global class WSConnection {
     }
 
     /**
-     * @description Synchronously listens to the updates from the WebSocket server
-     * @throws ConnectionException If the listening to the WebSocket server failed
+     * @description Synchronously listens to the updates from the WebSocket server. This will not work if the a asynchronous job has been already listening to updates in `WSClient`
+     * @throws ConnectionException If the connection is already closed or if the listening to the WebSocket server failed
      * @return `true` if successfully received an update from the WebSocket server. `false` if the timeout response has been returned
      */
     global Boolean listen() {
-        // TODO: Don't allow to listen again if the connection is closed
+        if (closed) {
+            throw new ConnectionException('The connection is already closed');
+        }
+
         WSResponsePayload response = WSDispatcherService.listen(clientId);
         if (!response.success) {
             throw new ConnectionException('Failed to listen sync: ' + response.firstMessage);
