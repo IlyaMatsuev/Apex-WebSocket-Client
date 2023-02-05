@@ -34,6 +34,6 @@ sfdx force:source:deploy -u "$org_alias" -p ./src/main \
 sfdx force:apex:execute -u "$org_alias" -f ./scripts/apex/DeployDefaultWSSettings.apex --json
 
 info "Assigning permissions..."
-sfdx force:user:permset:assign -n ApexWSClientUser -u "$scratch_alias"
+sfdx force:user:permset:assign -n ApexWSClientUser -u "$org_alias"
 
 info "Deployment has been finished.\\nOpen the org with 'sfdx force:org:open -u $org_alias'"
