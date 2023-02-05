@@ -26,5 +26,5 @@ All classes available for use can be found [here](types). There is also a short 
 
 Contains ws-dispatcher related settings.
 
--   `Endpoint__c` - The endpoint of the ws-dispatcher server instance. Default is _https://ws-dispatcher.herokuapp.com/ws_ but if you run ws-dispatcher on your own server, this property should be different (don't forget to add it to the Remote Site Settings).
+-   `Endpoint__c` - The endpoint of the ws-dispatcher server instance. Default is _https://ws-dispatcher.onrender.com/ws_ but if you run ws-dispatcher on your own server, this property should be different (don't forget to add it to the Remote Site Settings).
 -   `Timeout__c` - Timeout in milliseconds for the HTTP calls made to the ws-dispatcher. It defines how often the Listen job will send requests for fetching WebSocket updates. For example, if your WebSocket server usually sends messages rarely you should consider setting a high value (like 50000). If your WebSocket server sends messages often you should consider setting the lowest value (like 10000). The maximum value is 120000.

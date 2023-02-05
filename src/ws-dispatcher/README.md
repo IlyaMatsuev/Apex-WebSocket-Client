@@ -4,9 +4,18 @@ This is the Fastify server which redirects HTTP requests as WebSocket messages t
 
 ## Deploy & Run
 
-The server is running on Heroku at https://ws-dispatcher.herokuapp.com/ but I'd recommend you to deploy it as your own application, so it would work faster.
+The server is running on Render at https://ws-dispatcher.onrender.com/ but I'd recommend you to deploy it as your own application, so it would work faster.
 
-### With Heroku
+### With Render
+
+To create your own instance of ws-dispatcher on Render you'd need to fork this repository. Then, when you sign up at render.com and create a new WebService app, you can connect your new fork repository. It will automatically detect docker image but you'll need to provide path to `the Docker build context` and `Dockerfile`:
+
+-   Docker build context: src/ws-dispatcher
+-   Dockerfile: src/ws-dispatcher/Dockerfile
+
+The just create the app and wait till it started, you'll get your own domain that you can use.
+
+### With Heroku (not free anymore)
 
 You can deploy the server to your own Heroku account. I prepared two scripts for this purpose: [`heroku-deploy.sh`](../../scripts/heroku-deploy.sh) and [`heroku-update.sh`](../../scripts/heroku-update.sh).
 
@@ -26,7 +35,7 @@ Go to the project `root directory` and run:
 
 ### By Your Own
 
-I prepared the [docker image](https://hub.docker.com/r/ilyamatsuev/ws-dispatcher), so you can deploy it anywhere you want (AWS, Azure, ...). Pull the docker image running:
+I prepared the [docker image](https://hub.docker.com/r/ilyamatsuev/ws-dispatcher), so you can deploy it anywhere you want (AWS, Azure, etc.). Pull the docker image running:
 
 ```
 docker pull ilyamatsuev/ws-dispatcher
@@ -34,7 +43,7 @@ docker pull ilyamatsuev/ws-dispatcher
 
 #### NOTE
 
-Don't forget to update the [`WSDispatcherSetting`](../../docs/README.md#wsdispatchersettingc) custom settings and Remote Site Settings if you use your own Heroku app or any other platform.
+Don't forget to update the [`WSDispatcherSetting`](../../docs/README.md#wsdispatchersettingc) custom settings and Remote Site Settings if you use your own Render app or any other platform.
 
 ## API
 
