@@ -14,7 +14,7 @@
     },
     "servers": [
         {
-            "url": "https://ws-dispatcher.herokuapp.com"
+            "url": "https://ws-dispatcher.onrender.com"
         }
     ],
     "tags": [
@@ -82,7 +82,7 @@
                     "endpoint": {
                         "type": "string",
                         "description": "The endpoint URL of the WebSocket server",
-                        "example": "wss://test-ws-server-123.herokuapp.com"
+                        "example": "wss://test-ws-server-123.onrender.com"
                     },
                     "protocol": {
                         "type": "string",
