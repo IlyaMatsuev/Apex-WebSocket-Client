@@ -47,12 +47,12 @@ _Let's say we receive a new message every 10 seconds. For a minute of an establi
 
 ### From Unmanaged Package
 
-You can just install the package by the link on a [sandbox](https://test.salesforce.com/packaging/installPackage.apexp?p0=04t5Y000001wMt5QAE) or [dev org](https://login.salesforce.com/packaging/installPackage.apexp?p0=04t5Y000001wMt5QAE).
+You can just install the package by the link on a [sandbox](https://test.salesforce.com/packaging/installPackage.apexp?p0=04t5Y000001zNZfQAM) or [dev org](https://login.salesforce.com/packaging/installPackage.apexp?p0=04t5Y000001zNZfQAM).
 
 If you prefer using salesforce CLI you can run:
 
 ```
-sfdx force:package:install -p 04t5Y000001wMt5QAE -w 10 -b 10 -u <username>
+sfdx force:package:install -p 04t5Y000001zNZfQAM -w 10 -b 10 -u <username>
 ```
 
 ### From Source

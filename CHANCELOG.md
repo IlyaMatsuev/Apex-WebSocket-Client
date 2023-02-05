@@ -1,7 +1,7 @@
-# Unreleased
+# Version 1.1
 
-Package name:
-Package Id:
+Package name: ws-apex-client@1.1.0
+Package Id: 04t5Y000001zNZfQAM
 
 ## What's changed
 
