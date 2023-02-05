@@ -1,5 +1,5 @@
-@IsTest(IsParallel=true)
-public class WSDispatcherServiceTest {
+@IsTest(IsParallel = true)
+private class WSDispatcherServiceTest {
     private static final String CLIENT_ID = 'eb3e9a51-f7a3-493b-b208-fae170374e8e';
 
     @TestSetup
@@ -164,12 +164,8 @@ public class WSDispatcherServiceTest {
         WSListenEventHandler.eventPublisher = eventPublisher;
         WSDispatcherService.listenAsync(
             CLIENT_ID,
-            new List<WSHandlerWrapper>{
-                new WSHandlerWrapper(
-                    WSHandlerWrapper.EventType.Close,
-                    WSDispatcherServiceTest.MockUpdateHandler.class,
-                    null
-                )
+            new List<WSHandlerWrapper> {
+                new WSHandlerWrapper(WSHandlerWrapper.EventType.Close, WSUpdateHandlerMock.class, null)
             }
         );
         Test.getEventBus().deliver();
@@ -178,7 +174,7 @@ public class WSDispatcherServiceTest {
         System.assertEquals(1, eventPublisher.updates.size(), 'There should be only one update event');
         System.assertEquals(CLIENT_ID, eventPublisher.updates.get(0).ClientId__c, 'Client ids do not match');
         System.assertEquals(
-            'WSDispatcherServiceTest.MockUpdateHandler',
+            'WSUpdateHandlerMock',
             eventPublisher.updates.get(0).HandlerClassName__c,
             'Handler class name is not correct'
         );
@@ -203,17 +199,9 @@ public class WSDispatcherServiceTest {
         WSListenEventHandler.eventPublisher = eventPublisher;
         WSDispatcherService.listenAsync(
             CLIENT_ID,
-            new List<WSHandlerWrapper>{
-                new WSHandlerWrapper(
-                    WSHandlerWrapper.EventType.Message,
-                    WSDispatcherServiceTest.MockUpdateHandler.class,
-                    null
-                ),
-                new WSHandlerWrapper(
-                    WSHandlerWrapper.EventType.Close,
-                    WSDispatcherServiceTest.MockUpdateHandler.class,
-                    null
-                )
+            new List<WSHandlerWrapper> {
+                new WSHandlerWrapper(WSHandlerWrapper.EventType.Message, WSUpdateHandlerMock.class, null),
+                new WSHandlerWrapper(WSHandlerWrapper.EventType.Close, WSUpdateHandlerMock.class, null)
             }
         );
         Test.getEventBus().deliver();
@@ -280,11 +268,6 @@ public class WSDispatcherServiceTest {
     private static void eventPublisherTest() {
         // This test method is only needed for covering WSListenEventHandler.EventPublisher class since there is no logic
         new WSListenEventHandler.EventPublisher().publish(new List<WSListenEvent__e>());
-    }
-
-    public class MockUpdateHandler implements IWSMessageHandler {
-        public void handle(WSConnection connection, Map<String, Object> args) {
-        }
     }
 
     private class MockEventPublisher extends WSListenEventHandler.EventPublisher {

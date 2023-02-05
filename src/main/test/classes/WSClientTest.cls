@@ -1,5 +1,5 @@
-@IsTest(IsParallel=true)
-public class WSClientTest {
+@IsTest(IsParallel = true)
+private class WSClientTest {
     @TestSetup
     private static void init() {
         insert new WSDispatcherSetting__c(
@@ -51,12 +51,12 @@ public class WSClientTest {
         );
         Test.startTest();
         WSConnection connection = new WSClient()
-            .onMessage(WSClientTest.MockUpdateHandler.class)
-            .onMessage(WSClientTest.MockUpdateHandler.class, new Map<String, Object>{ 'test' => 1 })
-            .onError(WSClientTest.MockUpdateHandler.class)
-            .onError(WSClientTest.MockUpdateHandler.class, new Map<String, Object>{ 'test' => 2 })
-            .onClose(WSClientTest.MockUpdateHandler.class)
-            .onClose(WSClientTest.MockUpdateHandler.class, new Map<String, Object>{ 'test' => 3 })
+            .onMessage(WSUpdateHandlerMock.class)
+            .onMessage(WSUpdateHandlerMock.class, new Map<String, Object> { 'test' => 1 })
+            .onError(WSUpdateHandlerMock.class)
+            .onError(WSUpdateHandlerMock.class, new Map<String, Object> { 'test' => 2 })
+            .onClose(WSUpdateHandlerMock.class)
+            .onClose(WSUpdateHandlerMock.class, new Map<String, Object> { 'test' => 3 })
             .connect('wss://fake.ws.endpoint/');
         Test.getEventBus().deliver();
         Test.stopTest();
@@ -65,8 +65,7 @@ public class WSClientTest {
         // Even Test.startTest(), Test.startTest() and Test.getEventBus().deliver() don't work with this scenario
     }
 
-    public class MockUpdateHandler implements IWSMessageHandler {
-        public void handle(WSConnection connection, Map<String, Object> args) {
-        }
+    public class WSUpdateHandlerMock implements IWSMessageHandler {
+        public void handle(WSConnection connection, Map<String, Object> args) {}
     }
 }

@@ -33,7 +33,6 @@ public class WSListenEventHandler extends WSEventHandler {
             this.handlers = handlers;
         }
 
-        // TODO: If the ws server is down and we submit listen job with error handler, then it won't stop
         public override void execute() {
             DateTime calloutStart = DateTime.now();
             WSResponsePayload response = WSDispatcherService.listen(clientId);
@@ -67,7 +66,6 @@ public class WSListenEventHandler extends WSEventHandler {
         }
 
         private void listenAgain() {
-            // TODO: Probably should execute again only if we got Timeout response. Otherwise a lot of jobs are queued
             if (isUnderCalloutCountLimit() && isUnderCalloutTimeLimit()) {
                 execute();
             } else {

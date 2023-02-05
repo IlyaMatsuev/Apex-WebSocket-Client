@@ -1,12 +1,11 @@
 {
     "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "editor.formatOnSave": true,
-    "editor.formatOnPaste": true,
+    "editor.formatOnSave": false,
+    "editor.formatOnPaste": false,
     "files.exclude": {
+        ".sf/": true,
         ".sfdx/": true,
-        "node_modules/": true,
-        "package-lock.json": true,
-        "src/ws-dispatcher/package-lock.json": true,
-        "src/ws-dispatcher/node_modules": true
+        "**/node_modules/": true,
+        "**/package-lock.json": true
     }
 }

@@ -1,6 +1,12 @@
 # IDE
 **/.idea/
 
+# SFDX
+.sfdx/
+.sf/
+.localdevserver/
+IlluminatedCloud/
+
 # Dependencies
 **/node_modules/
 **/package-lock.json
@@ -9,14 +15,13 @@
 **/build/
 **/dist/
 
-# MacOs
+# System Files
 .DS_Store
+*.db
+*.ini
 
 # Logs
-*.log*
-
-# SFDX
-.sfdx/
+*.log
 
 # Test projects
 **/test-ws-server/**

@@ -3,12 +3,22 @@
 
 # SFDX
 .sfdx/
+.sf/
 .localdevserver
-**/staticresources/**
+**/staticresources/
 
-# Packages
-**/node_modules/**
+# Dependencies
+**/node_modules/
+**/package-lock.json
 
 # Build
-**/build/**
-**/dist/**
+**/build/
+**/dist/
+
+# System Files
+.DS_Store
+*.db
+*.ini
+
+# Logs
+*.log

@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # This script creates a new heroku application by the provided name
-# And pushes the ws-dispatcher docker image to the just created heroku app
+# And pushes the docker image to just created heroku app
 # Example: sh ./scripts/heroku-deploy.sh my-own-ws-dispatcher
 
 red=`tput setaf 1`
@@ -10,28 +10,33 @@ reset=`tput sgr0`
 
 app_name=$1
 
+info() {
+    echo
+    echo "${green}$1${reset}"
+}
+
+error() {
+    echo "${red}$1${reset}"
+	exit 1
+}
+
 if [[ -z "$app_name" ]]
 then
-	echo "${red}Specify a unique heroku app name as the first parameter${reset}"
-	exit 1
+	error "Specify a unique heroku app name as the first parameter"
 fi
 
 heroku create "$app_name" || { exit 1; }
 
-echo
-echo "${green}Please log into your heroku account${reset}"
+info "Please log into your heroku account"
 heroku login || { exit 1; }
 heroku container:login || { exit 1; }
 
-echo
-echo "${green}Pushing the image to heroku...${reset}"
+info "Pushing the image to heroku..."
 docker pull ilyamatsuev/ws-dispatcher
 docker tag ilyamatsuev/ws-dispatcher registry.heroku.com/${app_name}/web
 docker push registry.heroku.com/${app_name}/web || { exit 1; }
 
-echo
-echo "${green}Running the container...${reset}"
+info "Running the container..."
 heroku container:release web -a "$app_name" || { exit 1; }
 
-echo
-echo "${green}Done. You can find the new app at https://${app_name}.herokuapp.com/${reset}"
+info "Done. You can find the new app at https://${app_name}.herokuapp.com/"

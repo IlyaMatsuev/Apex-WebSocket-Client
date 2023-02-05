@@ -4,5 +4,35 @@
     "tabWidth": 4,
     "semi": true,
     "singleQuote": true,
-    "arrowParens": "avoid"
+    "arrowParens": "avoid",
+    "apexInsertFinalNewline": true,
+    "apexFormatAnnotations": true,
+    "apexFormatStandardTypes": true,
+    "apexFormatInlineComments": true,
+    "apexAnnotationsArgsSpacing": true,
+    "apexEmptyBlockBracketLine": true,
+    "apexExpandOneLineProperties": false,
+    "apexExplicitAccessModifier": true,
+    "apexSortModifiers": true,
+    "overrides": [
+        {
+            "files": "*.xml",
+            "options": {
+                "printWidth": 240,
+                "bracketSameLine": true
+            }
+        },
+        {
+            "files": ["*.yml", "*.yaml"],
+            "options": {
+                "tabWidth": 2
+            }
+        },
+        {
+            "files": "*.trigger",
+            "options": {
+                "apexExplicitAccessModifier": false
+            }
+        }
+    ]
 }

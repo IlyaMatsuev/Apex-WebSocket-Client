@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>HandlerClassName__c</fullName>
-    <description
-    >The class name of the handler implementation. For nested classes separate class names by dots</description>
+    <description>The class name of the handler implementation. For nested classes separate class names by dots</description>
     <externalId>false</externalId>
     <isFilteringDisabled>false</isFilteringDisabled>
     <isNameField>false</isNameField>
